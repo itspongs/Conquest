@@ -42,7 +42,7 @@ public class ConquestMain {
                     playMenu(playerName);
                     break;
                 case "2":
-                    showScores();
+                    showScores(playerName);
                     break;
                 case "3":
                     exitGame(playerName);
@@ -125,11 +125,9 @@ public class ConquestMain {
         }
     }
 
-    public static void showScores() {
-        //QuizScores.show(input);
-        System.out.println("==================================================");
-        System.out.println("TO BE IMPLEMENTED QuizScores.java");
-        System.out.println("==================================================");
+    public static void showScores(String playerName) {
+        QuizScores quizScores = new QuizScores(playerName);
+        quizScores.display();
     }
 
     public static void exitGame(String playerName) {
