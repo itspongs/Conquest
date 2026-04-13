@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.Scanner;
 
 //Change the Name of the Category Quiz based on your assigned task (Example: GeographyQuiz)
-public class DrivingQuiz {
+public class FormatQuiz {
 
     private String playerName;
 
