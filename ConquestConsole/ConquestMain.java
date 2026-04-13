@@ -1,3 +1,4 @@
+import ConquestPkg.*;
 import java.util.Scanner;
 
 public class ConquestMain {
@@ -96,9 +97,8 @@ public class ConquestMain {
                 System.out.println("==================================================");
                 break;
             case "2":
-                //DrivingQuiz.start(playerName, input);
-                System.out.println("TO BE IMPLEMENTED DrivingQuiz.java");
-                System.out.println("==================================================");
+                DrivingQuiz drivingQuiz = new DrivingQuiz(playerName);
+                drivingQuiz.start();
                 break;
             case "3":
                 //GeneralKnowledgeQuiz.start(playerName, input);
