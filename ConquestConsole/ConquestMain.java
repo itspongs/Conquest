@@ -33,9 +33,6 @@ public class ConquestMain {
         mainMenu(playerName);
     }
 
-    // =========================================================================
-    // METHOD 1: Get Player Name
-    // =========================================================================
     public static String getPlayerName() {
         String name = "";
         while (name.isEmpty()) {
@@ -50,9 +47,6 @@ public class ConquestMain {
         return name;
     }
 
-    // =========================================================================
-    // METHOD 2: Main Menu
-    // =========================================================================
     public static void mainMenu(String playerName) {
         while (true) {
             System.out.println("Welcome to Conquest, " + playerName + "!");
@@ -82,9 +76,6 @@ public class ConquestMain {
         }
     }
 
-    // =========================================================================
-    // METHOD 3: Play Menu
-    // =========================================================================
     public static void playMenu(String playerName) {
         System.out.println("==================================================");
         System.out.println("Choose which quiz will you be taking:");
@@ -112,7 +103,6 @@ public class ConquestMain {
 
         System.out.println("==================================================");
 
-        // 0 = go back to main menu
         if (quizChoice.equals("0")) {
             System.out.println("Returning to Main Menu...");
             System.out.println("==================================================");
@@ -122,9 +112,6 @@ public class ConquestMain {
         launchQuiz(quizChoice, playerName);
     }
 
-    // =========================================================================
-    // METHOD 4: Launch Quiz  (calls the correct Quiz class)
-    // =========================================================================
     public static void launchQuiz(String quizChoice, String playerName) {
         switch (quizChoice) {
             case "1":
@@ -162,9 +149,6 @@ public class ConquestMain {
         }
     }
 
-    // =========================================================================
-    // METHOD 5: Show Scores
-    // =========================================================================
     public static void showScores() {
         //QuizScores.show(input);
         System.out.println("==================================================");
@@ -172,9 +156,6 @@ public class ConquestMain {
         System.out.println("==================================================");
     }
 
-    // =========================================================================
-    // METHOD 6: Exit
-    // =========================================================================
     public static void exitGame(String playerName) {
         System.out.println("==================================================");
         System.out.println("Thank you for Playing Conquest, " + playerName + "!");
@@ -183,9 +164,6 @@ public class ConquestMain {
         System.exit(0);
     }
 
-    // =========================================================================
-    // METHOD 7: Error Handler
-    // =========================================================================
     public static void showError() {
         System.out.println("==================================================");
         System.out.println("[ERROR] Invalid Input.");
