@@ -7,8 +7,6 @@ public class ConquestMain {
     public static void main(String[] args) {
         String playerName = getPlayerName();
         mainMenu(playerName);
-
-        System.out.println("hello github");
     }
 
     public static String getPlayerName() {
