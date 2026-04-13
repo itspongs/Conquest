@@ -107,13 +107,13 @@ public class ConquestMain {
                 break;
             case "4":
                 //MediaQuiz.start(playerName, input);
-                System.out.println("TO BE IMPLEMENTED MediaQuiz.java");
-                System.out.println("==================================================");
+                MediaQuiz mediaQuiz = new MediaQuiz(playerName);
+                mediaQuiz.start();
                 break;
             case "5":
                 //ProgrammingQuiz.start(playerName, input);
-                System.out.println("TO BE IMPLEMENTED ProgrammingQuiz.java");
-                System.out.println("==================================================");
+                ProgrammingQuiz programmingQuiz = new ProgrammingQuiz(playerName);
+                programmingQuiz.start();
                 break;
             case "6":
                 //BrainrotQuiz.start(playerName, input);
