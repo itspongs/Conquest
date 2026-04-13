@@ -416,7 +416,7 @@ public class DrivingQuiz {
                     System.out.println("==================================================");
                 }
                 else {
-                    System.out.println(answer + " is incorrect! THe correct answer is " + correctLetter + ".");
+                    System.out.println(answer + " is incorrect! The correct answer is " + correctLetter + ".");
                     System.out.println("==================================================");
                 }
                 return answer.equals(correctLetter);
