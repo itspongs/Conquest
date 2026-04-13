@@ -1,27 +1,3 @@
-// Applied Technical Requirements:
-
-// METHODS
-// - getPlayerName
-// - mainMenu
-// - playMenu
-// - launchQuiz
-// - showScores
-// - exitGame
-// - ErrorHandler
-
-// Loops
-// - while-loop
-
-// Objects OOP
-// - GeographyQuiz
-// - DrivingQuiz
-// - GeneralKnowledge
-// - MediaQuiz
-// - ProgrammingQuiz
-// - BrainrotQuiz
-
-
-
 import java.util.Scanner;
 
 public class ConquestMain {
