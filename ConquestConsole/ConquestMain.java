@@ -117,8 +117,8 @@ public class ConquestMain {
                 break;
             case "6":
                 //BrainrotQuiz.start(playerName, input);
-                System.out.println("TO BE IMPLEMENTED BrainrotQuiz.java");
-                System.out.println("==================================================");
+                BrainrotQuiz brainrotQuiz = new BrainrotQuiz(playerName);
+                brainrotQuiz.start();
                 break;
             default:
                 showError();
