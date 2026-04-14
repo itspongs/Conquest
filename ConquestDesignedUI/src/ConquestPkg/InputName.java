@@ -18,7 +18,7 @@ public class InputName extends JFrame {
         setVisible(true);
     }
 
-    // ===================== WINDOW SETUP =====================
+    //WINDOW SETUP 
 
     private void setupWindow() {
         setTitle("Conquest");
@@ -28,7 +28,7 @@ public class InputName extends JFrame {
         gd.setFullScreenWindow(this);
     }
 
-    // ===================== BUILD UI =====================
+    //BUILD UI 
 
     private void buildUI() {
         BackgroundPanel outerPanel = new BackgroundPanel();
@@ -39,7 +39,7 @@ public class InputName extends JFrame {
         outerPanel.add(buildCenterPanel(), BorderLayout.CENTER);
     }
 
-    // ===================== TOP PANEL =====================
+    //TOP PANEL 
 
     private JPanel buildTopPanel() {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -61,7 +61,7 @@ public class InputName extends JFrame {
         return toggleBtn;
     }
 
-    // ===================== CENTER PANEL =====================
+    //CENTER PANEL 
 
     private JPanel buildCenterPanel() {
         JPanel centerPanel = new JPanel(new GridBagLayout());
@@ -86,10 +86,10 @@ public class InputName extends JFrame {
         return title;
     }
 
-    // ===================== NAME FIELD =====================
+    //NAME FIELD 
 
     private JTextField buildNameField() {
-        nameField = new JTextField("Name", 20) {
+        nameField = new JTextField("", 20) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -112,7 +112,7 @@ public class InputName extends JFrame {
         };
 
         nameField.setPreferredSize(new Dimension(500, 55));
-        nameField.setFont(new Font("Serif", Font.PLAIN, 22));
+        nameField.setFont(new Font("Arial", Font.BOLD, 22));
         nameField.setHorizontalAlignment(JTextField.CENTER);
         nameField.setOpaque(false);
         nameField.setForeground(new Color(80, 30, 30));
@@ -132,7 +132,7 @@ public class InputName extends JFrame {
         return nameField;
     }
 
-    // ===================== PROCEED BUTTON =====================
+    // PROCEED BUTTON
 
     private JButton buildProceedButton() {
         proceedBtn = new JButton("PROCEED") {
@@ -179,7 +179,6 @@ public class InputName extends JFrame {
                 g2.dispose();
             }
 
-            // Helper to read scale from client property
             private float getScale() {
                 Object prop = getClientProperty("scale");
                 return (prop instanceof Float) ? (Float) prop : 1.0f;
@@ -200,14 +199,13 @@ public class InputName extends JFrame {
         return proceedBtn;
     }
 
-    // ===================== ACTIONS & LOGIC =====================
+    //ACTIONS & LOGIC
 
     private void handleProceed() {
         String name = nameField.getText().trim();
         if (isValidName(name)) {
             GameData.playerName = name;
-            dispose(); // close InputName window
-            new MainMenu(); // open MainMenu
+            new MainMenu(this);
         } else {
             highlightFieldError();
         }
@@ -268,7 +266,7 @@ public class InputName extends JFrame {
         }
     }
 
-    // ===================== BACKGROUND PANEL =====================
+    //BACKGROUND PANEL
 
     class BackgroundPanel extends JPanel {
         private BufferedImage bgImage;

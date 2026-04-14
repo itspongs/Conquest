@@ -102,8 +102,8 @@ public class ConquestMain {
                 break;
             case "3":
                 //GeneralKnowledgeQuiz.start(playerName, input);
-                System.out.println("TO BE IMPLEMENTED GeneralKnowledgeQuiz.java");
-                System.out.println("==================================================");
+                GeneralKnowledgeQuiz generalKnowledgeQuiz = new GeneralKnowledgeQuiz(playerName);
+                generalKnowledgeQuiz.start();
                 break;
             case "4":
                 //MediaQuiz.start(playerName, input);
