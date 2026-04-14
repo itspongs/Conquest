@@ -93,8 +93,8 @@ public class ConquestMain {
         switch (quizChoice) {
             case "1":
                 //GeographyQuiz.start(playerName, input);
-                System.out.println("TO BE IMPLEMENTED GeographyQuiz.java");
-                System.out.println("==================================================");
+                GeographyQuiz geographyQuiz = new GeographyQuiz(playerName);
+                geographyQuiz.start();
                 break;
             case "2":
                 DrivingQuiz drivingQuiz = new DrivingQuiz(playerName);
