@@ -7,7 +7,7 @@ import javax.swing.*;
 
 public class InputName extends JFrame {
 
-    private boolean isFullScreen = true;
+    private boolean isFullScreen = false;  // Start windowed
     private GraphicsDevice gd;
     private JTextField nameField;
     private JButton proceedBtn;
@@ -19,17 +19,20 @@ public class InputName extends JFrame {
     }
 
     //WINDOW SETUP 
-
     private void setupWindow() {
         setTitle("Conquest");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setUndecorated(true);
+        setUndecorated(false);  // Windowed mode
+        
+        // Set windowed size and center it
+        setSize(1024, 768);
+        setLocationRelativeTo(null);
+        
+        // Only set up fullscreen capability, don't activate it
         gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        gd.setFullScreenWindow(this);
     }
 
     //BUILD UI 
-
     private void buildUI() {
         BackgroundPanel outerPanel = new BackgroundPanel();
         outerPanel.setLayout(new BorderLayout());
@@ -40,7 +43,6 @@ public class InputName extends JFrame {
     }
 
     //TOP PANEL 
-
     private JPanel buildTopPanel() {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         topPanel.setOpaque(false);
@@ -62,7 +64,6 @@ public class InputName extends JFrame {
     }
 
     //CENTER PANEL 
-
     private JPanel buildCenterPanel() {
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
@@ -87,7 +88,6 @@ public class InputName extends JFrame {
     }
 
     //NAME FIELD 
-
     private JTextField buildNameField() {
         nameField = new JTextField("", 20) {
             @Override
@@ -118,6 +118,7 @@ public class InputName extends JFrame {
         nameField.setForeground(new Color(80, 30, 30));
         nameField.setCaretColor(new Color(80, 30, 30));
         nameField.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+        nameField.setText("Name");  // Set placeholder text
 
         nameField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent e) {
@@ -133,7 +134,6 @@ public class InputName extends JFrame {
     }
 
     // PROCEED BUTTON
-
     private JButton buildProceedButton() {
         proceedBtn = new JButton("PROCEED") {
             @Override
@@ -200,7 +200,6 @@ public class InputName extends JFrame {
     }
 
     //ACTIONS & LOGIC
-
     private void handleProceed() {
         String name = nameField.getText().trim();
         if (isValidName(name)) {
@@ -250,6 +249,7 @@ public class InputName extends JFrame {
 
     private void toggleScreenMode() {
         if (isFullScreen) {
+            // Switch from fullscreen to windowed
             gd.setFullScreenWindow(null);
             dispose();
             setUndecorated(false);
@@ -258,6 +258,7 @@ public class InputName extends JFrame {
             setVisible(true);
             isFullScreen = false;
         } else {
+            // Switch from windowed to fullscreen
             dispose();
             setUndecorated(true);
             setVisible(true);
@@ -267,7 +268,6 @@ public class InputName extends JFrame {
     }
 
     //BACKGROUND PANEL
-
     class BackgroundPanel extends JPanel {
         private BufferedImage bgImage;
 
