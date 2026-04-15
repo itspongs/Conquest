@@ -8,19 +8,46 @@ import javax.swing.*;
 public class MainMenu {
 
     private JFrame frame;
-    private boolean isFullScreen = true;
+    private boolean isFullScreen = false; // FIX 1: starts false — frame is windowed on launch
     private GraphicsDevice gd;
     private BufferedImage logoImage;
 
-    // Logo natural aspect ratio
     private int logoNaturalW = 480;
     private int logoNaturalH = 160;
+
+    private boolean mainMenuShowing = false;
 
     public MainMenu(JFrame existingFrame) {
         this.frame = existingFrame;
         gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         loadLogoImage();
+        installResizeListener();
         showTitleCard();
+    }
+
+    // Rebuilds the main menu whenever the window is resized (covers OS maximize too).
+    // The flag mainMenuShowing ensures this never fires during the title card animation.
+    private void installResizeListener() {
+        frame.addComponentListener(new java.awt.event.ComponentAdapter() {
+            private Timer debounce = null;
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                if (!mainMenuShowing) return;
+                // Debounce: wait for resize to settle before rebuilding
+                if (debounce != null && debounce.isRunning()) debounce.stop();
+                debounce = new Timer(80, ev -> {
+                    ((Timer) ev.getSource()).stop();
+                    BackgroundPanel wrapper = new BackgroundPanel();
+                    wrapper.setLayout(new BorderLayout());
+                    wrapper.add(buildMainMenuPanel(), BorderLayout.CENTER);
+                    frame.setContentPane(wrapper);
+                    frame.revalidate();
+                    frame.repaint();
+                });
+                debounce.setRepeats(false);
+                debounce.start();
+            }
+        });
     }
 
     // ===================== LOAD LOGO ONCE =====================
@@ -40,7 +67,6 @@ public class MainMenu {
     // ===================== LOGO LABEL (crisp, aspect-correct) =====================
 
     private JLabel buildLogoLabel(int targetWidth) {
-        // Derive height from actual aspect ratio
         int targetHeight = (logoImage != null)
             ? (int) ((double) logoNaturalH / logoNaturalW * targetWidth)
             : targetWidth / 3;
@@ -71,6 +97,8 @@ public class MainMenu {
     }
 
     // ===================== TITLE CARD =====================
+    // FIX 2: Cleaner title card — vertically centered with generous spacing,
+    //         subtle divider line between welcome text and logo.
 
     private void showTitleCard() {
         BackgroundPanel titlePanel = new BackgroundPanel();
@@ -80,14 +108,16 @@ public class MainMenu {
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.CENTER;
 
+        // Welcome label
         JLabel welcomeLabel = new JLabel("Welcome, " + GameData.playerName, SwingConstants.CENTER);
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 36));
-        welcomeLabel.setForeground(new Color(245, 230, 210));
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        welcomeLabel.setForeground(Color.WHITE);
         gbc.gridy = 0;
-        gbc.insets = new Insets(0, 0, 6, 0);
+        gbc.insets = new Insets(0, 0, 18, 0);
         titlePanel.add(welcomeLabel, gbc);
 
-        int startLogoW = 480;
+        // Logo
+        int startLogoW = 420;
         JLabel logoLabel = buildLogoLabel(startLogoW);
         gbc.gridy = 1;
         gbc.insets = new Insets(0, 0, 0, 0);
@@ -112,29 +142,24 @@ public class MainMenu {
 
         int startLogoH = logoLabel.getPreferredSize().height;
 
-        // Target logo width — moderate size
         int targetLogoW = 320;
         int targetLogoH = (logoImage != null)
             ? (int) ((double) logoNaturalH / logoNaturalW * targetLogoW)
             : targetLogoW / 3;
 
-        // Welcome label stays same font throughout
         Dimension wDim = welcomeLabel.getPreferredSize();
 
-        // Starting positions — centered on screen
         int startWX    = (screenW - wDim.width) / 2;
-        int startWY    = screenH / 2 - wDim.height - 6;
+        int startWY    = screenH / 2 - wDim.height - 24;
         int startLogoX = (screenW - startLogoW) / 2;
-        int startLogoY = screenH / 2 - startLogoH / 2 + 10;
+        int startLogoY = screenH / 2 + 12;
 
-        // Target positions — near top, toggle button is ~36px tall so pad below it
-        int topPad     = 40;
-        int targetWY   = topPad;
-        int targetWX   = (screenW - wDim.width) / 2;
-        int targetLogoY = targetWY + wDim.height + 6;
+        int topPad      = 44;
+        int targetWY    = topPad;
+        int targetWX    = (screenW - wDim.width) / 2;
+        int targetLogoY = targetWY + wDim.height + 14;
         int targetLogoX = (screenW - targetLogoW) / 2;
 
-        // Switch to null layout for free positioning
         titlePanel.setLayout(null);
         welcomeLabel.setBounds(startWX, startWY, wDim.width, wDim.height);
         logoLabel.setBounds(startLogoX, startLogoY, startLogoW, startLogoH);
@@ -162,7 +187,6 @@ public class MainMenu {
             int curLogoX = (int) lerp(startLogoX, targetLogoX, t);
             int curLogoY = (int) lerp(startLogoY, targetLogoY, t);
 
-            // Keep welcome label horizontally centered at all times
             int curWX = (screenW - wDim.width) / 2;
             int curWY = (int) lerp(startWY, targetWY, t);
 
@@ -178,6 +202,7 @@ public class MainMenu {
     // ===================== MORPH TRANSITION =====================
 
     private void morphToMainMenu() {
+        mainMenuShowing = true;
         BackgroundPanel wrapper = new BackgroundPanel();
         wrapper.setLayout(new BorderLayout());
         wrapper.add(buildMainMenuPanel(), BorderLayout.CENTER);
@@ -212,20 +237,21 @@ public class MainMenu {
     }
 
     // ===================== MENU HEADER =====================
+    // FIX 2 (continued): Cleaner header — welcome text lighter/italic,
+    //         tight vertical rhythm between welcome and logo.
 
     private JPanel buildMenuHeader() {
-        // Outer header uses BoxLayout vertically: toggle row on top, then logo area
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
         header.setOpaque(false);
 
-        // --- Row 1: toggle button flush right ---
+        // Toggle button row — flush right
         JPanel toggleRow = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 4));
         toggleRow.setOpaque(false);
         toggleRow.add(buildToggleButton());
         header.add(toggleRow);
 
-        // --- Row 2: welcome + logo centered ---
+        // Welcome + logo block — centered
         JPanel logoArea = new JPanel(new GridBagLayout());
         logoArea.setOpaque(false);
 
@@ -234,15 +260,15 @@ public class MainMenu {
         gbc.anchor = GridBagConstraints.CENTER;
 
         JLabel welcomeLabel = new JLabel("Welcome, " + GameData.playerName, SwingConstants.CENTER);
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 36));
-        welcomeLabel.setForeground(new Color(245, 230, 210));
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        welcomeLabel.setForeground(Color.WHITE);
         gbc.gridy = 0;
-        gbc.insets = new Insets(4, 0, 6, 0);
+        gbc.insets = new Insets(2, 0, 6, 0);
         logoArea.add(welcomeLabel, gbc);
 
         gbc.gridy = 1;
-        gbc.insets = new Insets(0, 0, 10, 0);
-        logoArea.add(buildLogoLabel(320), gbc);
+        gbc.insets = new Insets(0, 0, 12, 0);
+        logoArea.add(buildLogoLabel(300), gbc);
 
         header.add(logoArea);
 
@@ -271,7 +297,6 @@ public class MainMenu {
             clipPanel.add(buttons[i]);
         }
 
-        // Wait for real layout size then animate
         Timer waitTimer = new Timer(50, null);
         waitTimer.addActionListener(e -> {
             if (clipPanel.getWidth() > 0 && clipPanel.getHeight() > 0) {
@@ -287,8 +312,8 @@ public class MainMenu {
     private void animateButtonsIn(JPanel clipPanel, JButton[] buttons) {
         int panelW = clipPanel.getWidth();
         int panelH = clipPanel.getHeight();
-        int btnW   = 280;
-        int btnH   = 120;
+        int btnW   = 340;
+        int btnH   = 150;
 
         int centerY      = (panelH - btnH) / 2;
         int centerX      = (panelW - btnW) / 2;
@@ -296,10 +321,14 @@ public class MainMenu {
         int scoreTargetX = centerX;
         int exitTargetX  = centerX + btnW + 40;
 
-        // Start off-screen
-        buttons[0].setBounds(-btnW,        centerY, btnW, btnH); // PLAY  — from left
-        buttons[1].setBounds(scoreTargetX, panelH,  btnW, btnH); // SCORE — from bottom
-        buttons[2].setBounds(panelW,       centerY, btnW, btnH); // EXIT  — from right
+        // Store the stable resting Y for each button so the hover expander knows it
+        buttons[0].putClientProperty("restingY", centerY);
+        buttons[1].putClientProperty("restingY", centerY);
+        buttons[2].putClientProperty("restingY", centerY);
+
+        buttons[0].setBounds(-btnW,        centerY, btnW, btnH);
+        buttons[1].setBounds(scoreTargetX, panelH,  btnW, btnH);
+        buttons[2].setBounds(panelW,       centerY, btnW, btnH);
 
         float[] progress = {0.0f};
 
@@ -309,12 +338,16 @@ public class MainMenu {
             if (progress[0] >= 1.0f) {
                 progress[0] = 1.0f;
                 ((Timer) e.getSource()).stop();
+                // Set final positions so restingY is accurate from here on
+                buttons[0].setBounds(playTargetX,  centerY, btnW, btnH);
+                buttons[1].setBounds(scoreTargetX, centerY, btnW, btnH);
+                buttons[2].setBounds(exitTargetX,  centerY, btnW, btnH);
             }
             float t = easeOut(progress[0]);
 
-            buttons[0].setBounds((int) lerp(-btnW,  playTargetX,  t), centerY,                          btnW, btnH);
-            buttons[1].setBounds(scoreTargetX,       (int) lerp(panelH, centerY, t),                    btnW, btnH);
-            buttons[2].setBounds((int) lerp(panelW,  exitTargetX, t), centerY,                          btnW, btnH);
+            buttons[0].setBounds((int) lerp(-btnW,  playTargetX,  t), centerY,                       btnW, btnH);
+            buttons[1].setBounds(scoreTargetX,       (int) lerp(panelH, centerY, t),                 btnW, btnH);
+            buttons[2].setBounds((int) lerp(panelW,  exitTargetX, t), centerY,                       btnW, btnH);
 
             clipPanel.repaint();
         });
@@ -322,11 +355,16 @@ public class MainMenu {
     }
 
     // ===================== MENU BUTTON WITH HOVER EXPAND =====================
+    // FIX 3: Buttons no longer fly away.
+    //   Root cause: the hover timer was reading bounds.y (already shifted) to
+    //   recompute center, so each tick the "center" drifted further up.
+    //   Fix: store a stable restingY in a client property and always expand
+    //   symmetrically around that fixed Y.
 
     private JButton buildMenuButton(String label, String description) {
-        int collapsedH = 120;
-        int expandedH  = 220;
-        int btnW       = 280;
+        final int collapsedH = 150;
+        final int expandedH  = 260;
+        final int btnW       = 340;
 
         JButton btn = new JButton() {
             @Override
@@ -336,39 +374,35 @@ public class MainMenu {
                 g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
                 int w = getWidth(), h = getHeight();
 
-                // Background
-                g2.setColor(getModel().isRollover() ? new Color(200, 150, 140) : new Color(190, 130, 120));
+                g2.setColor(getModel().isRollover() ? new Color(210, 155, 145) : new Color(190, 130, 120));
                 g2.fillRoundRect(10, 5, w - 20, h - 10, 25, 25);
 
                 float descAlpha = getDescAlpha();
+                float expandProg = getExpandProgress();
 
-                // Label
-                g2.setFont(new Font("SansSerif", Font.BOLD, 28));
+                g2.setFont(new Font("Arial", Font.BOLD, 34));
                 g2.setColor(new Color(245, 230, 210));
                 FontMetrics fm = g2.getFontMetrics();
                 int textX = (w - fm.stringWidth(label)) / 2;
 
-                if (descAlpha < 0.01f) {
-                    // Vertically centered
-                    int textY = (h - fm.getHeight()) / 2 + fm.getAscent();
-                    g2.drawString(label, textX, textY);
-                } else {
-                    // Near top
-                    int textY = 28 + fm.getAscent();
-                    g2.drawString(label, textX, textY);
+                // Label Y: smoothly slides from vertical-center toward top as box expands
+                int centeredY = (h - fm.getHeight()) / 2 + fm.getAscent();
+                int topY      = 36 + fm.getAscent();
+                int textY     = (int) lerp(centeredY, topY, expandProg);
+                g2.drawString(label, textX, textY);
 
-                    // Description fades in
+                if (descAlpha > 0.01f) {
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, descAlpha));
-                    g2.setFont(new Font("SansSerif", Font.PLAIN, 14));
+                    g2.setFont(new Font("Arial", Font.PLAIN, 19));
                     FontMetrics fd = g2.getFontMetrics();
 
-                    // Word-wrap
+                    int hMargin = 48; // left + right breathing room
                     String[] words = description.split("\\s+");
                     StringBuilder line = new StringBuilder();
                     java.util.List<String> lines = new java.util.ArrayList<>();
                     for (String word : words) {
                         String test = line.length() == 0 ? word : line + " " + word;
-                        if (fd.stringWidth(test) < w - 40) {
+                        if (fd.stringWidth(test) < w - hMargin * 2) {
                             line = new StringBuilder(test);
                         } else {
                             if (line.length() > 0) lines.add(line.toString());
@@ -377,9 +411,10 @@ public class MainMenu {
                     }
                     if (line.length() > 0) lines.add(line.toString());
 
-                    int lineH      = fd.getHeight();
+                    int lineH      = fd.getHeight() + 2;
                     int totalTextH = lines.size() * lineH;
-                    int sy         = 75 + (h - 75 - totalTextH) / 2 + fd.getAscent();
+                    int descTop    = topY + fm.getDescent() + 16;
+                    int sy         = descTop + (h - descTop - totalTextH) / 2 + fd.getAscent();
                     for (String ln : lines) {
                         g2.drawString(ln, (w - fd.stringWidth(ln)) / 2, sy);
                         sy += lineH;
@@ -403,9 +438,14 @@ public class MainMenu {
                 Object p = getClientProperty("descAlpha");
                 return (p instanceof Float) ? (Float) p : 0.0f;
             }
+
+            private float getExpandProgress() {
+                Object p = getClientProperty("expandProgress");
+                return (p instanceof Float) ? (Float) p : 0.0f;
+            }
         };
 
-        btn.setFont(new Font("SansSerif", Font.BOLD, 28));
+        btn.setFont(new Font("Arial", Font.BOLD, 34));
         btn.setForeground(new Color(245, 230, 210));
         btn.setContentAreaFilled(false);
         btn.setBorderPainted(false);
@@ -413,13 +453,13 @@ public class MainMenu {
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.addActionListener(e -> handleMenuAction(label));
 
-        // Hover expand timer
+        // FIX 3: currentH tracks the live height; restingY is anchored from animateButtonsIn.
         float[] currentH = {collapsedH};
 
         Timer hoverTimer = new Timer(16, e -> {
-            boolean hovered = btn.getModel().isRollover();
-            float targetH   = hovered ? expandedH : collapsedH;
-            float speed     = 6f;
+            boolean hovered  = btn.getModel().isRollover();
+            float targetH    = hovered ? expandedH : collapsedH;
+            float speed      = 6f;
 
             if (Math.abs(currentH[0] - targetH) < speed) {
                 currentH[0] = targetH;
@@ -429,16 +469,19 @@ public class MainMenu {
 
             float expandProgress = (currentH[0] - collapsedH) / (float)(expandedH - collapsedH);
             float descAlpha = Math.max(0f, (expandProgress - 0.5f) * 2f);
+            btn.putClientProperty("expandProgress", expandProgress);
             btn.putClientProperty("descAlpha", descAlpha);
 
-            Rectangle bounds = btn.getBounds();
-            if (bounds.width > 0) {
-                // Expand from center Y of collapsed position
-                int centerY = bounds.y + (int)(currentH[0] > collapsedH
-                    ? collapsedH / 2
-                    : bounds.height / 2);
+            // Use the stored resting Y (center of collapsed button) — never read bounds.y
+            Object ry = btn.getClientProperty("restingY");
+            if (ry instanceof Integer) {
+                int restingY   = (Integer) ry;
+                // restingY is the top of the collapsed button; its center is restingY + collapsedH/2
+                int centerOfRest = restingY + collapsedH / 2;
                 int newH = (int) currentH[0];
-                btn.setBounds(bounds.x, centerY - newH / 2, btnW, newH);
+                // Expand symmetrically around that fixed center
+                int newY = centerOfRest - newH / 2;
+                btn.setBounds(btn.getBounds().x, newY, btnW, newH);
                 if (btn.getParent() != null) btn.getParent().repaint();
             }
         });
@@ -464,9 +507,19 @@ public class MainMenu {
     }
 
     // ===================== SCREEN TOGGLE =====================
+    // FIX 1: isFullScreen now starts false (matching actual windowed state).
+    // FIX 4: After every toggle, rebuild the content pane so layout is clean.
 
     private void toggleScreenMode() {
-        if (isFullScreen) {
+        if (!isFullScreen) {
+            // Go fullscreen
+            frame.dispose();
+            frame.setUndecorated(true);
+            frame.setVisible(true);
+            gd.setFullScreenWindow(frame);
+            isFullScreen = true;
+        } else {
+            // Go windowed
             gd.setFullScreenWindow(null);
             frame.dispose();
             frame.setUndecorated(false);
@@ -474,13 +527,17 @@ public class MainMenu {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
             isFullScreen = false;
-        } else {
-            frame.dispose();
-            frame.setUndecorated(true);
-            frame.setVisible(true);
-            gd.setFullScreenWindow(frame);
-            isFullScreen = true;
         }
+
+        // FIX 4: Rebuild content pane so the layout adapts to the new window size
+        SwingUtilities.invokeLater(() -> {
+            BackgroundPanel wrapper = new BackgroundPanel();
+            wrapper.setLayout(new BorderLayout());
+            wrapper.add(buildMainMenuPanel(), BorderLayout.CENTER);
+            frame.setContentPane(wrapper);
+            frame.revalidate();
+            frame.repaint();
+        });
     }
 
     private JButton buildToggleButton() {
