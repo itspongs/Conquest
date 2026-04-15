@@ -21,42 +21,49 @@ public class InputName {
     // METHOD 1: Frame
     public void createFrame() {
         frame = new JFrame("Conquest");
-        frame.setSize(400, 250);
+        frame.setSize(700, 450);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        frame.setLayout(null);
+        frame.setLayout(new GridBagLayout());
+        frame.setResizable(false);
     }
 
     // METHOD 2: Components
     public void createComponents() {
-        nameField = new JTextField();
-        nameField.setBounds(100, 70, 200, 30);
-
+        nameField = new JTextField(15);
         proceedBtn = new JButton("Proceed");
-        proceedBtn.setBounds(140, 120, 120, 30);
+
+        // Styling
+        nameField.setHorizontalAlignment(JTextField.CENTER);
+        nameField.setFont(new Font("Arial", Font.PLAIN, 30));
+        proceedBtn.setFont(new Font("Arial", Font.BOLD, 25));
     }
 
-    // METHOD 3: Add Components
+    // METHOD 3: Add Components (CENTERED)
     public void addComponents() {
-        JLabel title = new JLabel("Input Player Name");
-        title.setBounds(50, 20, 300, 40);
+        GridBagConstraints gbc = new GridBagConstraints();
 
-        // CENTER the text
-        title.setHorizontalAlignment(JLabel.CENTER);
+        gbc.gridx = 0;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.NONE;
 
-        // MAKE TEXT BIGGER
-        title.setFont(new Font("Arial", Font.BOLD, 20));
+        // TITLE
+        JLabel title = new JLabel("Input Player Name", JLabel.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 27));
 
-        // Center text inside the text field
-        nameField.setHorizontalAlignment(JTextField.CENTER);
-        nameField.setFont(new Font("Arial", Font.PLAIN, 16));
+        gbc.gridy = 0;
+        frame.add(title, gbc);
 
-        // Bigger button text
-        proceedBtn.setFont(new Font("Arial", Font.BOLD, 14));
+        // TEXT FIELD
+        gbc.gridy = 1;
+        frame.add(nameField, gbc);
 
-        frame.add(title);
-        frame.add(nameField);
-        frame.add(proceedBtn);
+        // BUTTON
+        gbc.gridy = 2;
+        frame.add(proceedBtn, gbc);
     }
 
     // METHOD 4: Actions
@@ -71,8 +78,14 @@ public class InputName {
         if (playerName.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "Please enter your name!");
         } else {
-            frame.dispose();
-            new MainMenu(playerName);
+            // 🔥 DO NOT DISPOSE FRAME
+            frame.getContentPane().removeAll();
+
+            // Load Main Menu in SAME frame
+            new MainMenu(frame, playerName);
+
+            frame.revalidate();
+            frame.repaint();
         }
     }
 }
