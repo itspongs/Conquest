@@ -81,7 +81,7 @@ public class InputName extends JFrame {
     }
 
     private JLabel buildTitle() {
-        JLabel title = new JLabel("INPUT PLAYER NAME", SwingConstants.CENTER);
+        JLabel title = new JLabel("PLAYER NAME", SwingConstants.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 48));
         title.setForeground(new Color(245, 230, 210));
         return title;
@@ -118,15 +118,15 @@ public class InputName extends JFrame {
         nameField.setForeground(new Color(80, 30, 30));
         nameField.setCaretColor(new Color(80, 30, 30));
         nameField.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        nameField.setText("Name");  // Set placeholder text
+        nameField.setText("Enter Player Name");  // Set placeholder text
 
         nameField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent e) {
                 resetFieldBorder();
-                if (nameField.getText().equals("Name")) nameField.setText("");
+                if (nameField.getText().equals("Enter Player Name")) nameField.setText("");
             }
             public void focusLost(java.awt.event.FocusEvent e) {
-                if (nameField.getText().isEmpty()) nameField.setText("Name");
+                if (nameField.getText().isEmpty()) nameField.setText("Enter Player Name");
             }
         });
 
@@ -211,7 +211,7 @@ public class InputName extends JFrame {
     }
 
     private boolean isValidName(String name) {
-        return !name.isEmpty() && !name.equals("Name");
+        return !name.isEmpty() && !name.equals("Enter Player Name");
     }
 
     private void highlightFieldError() {
