@@ -120,7 +120,6 @@ public class MainMenu {
         frame.revalidate();
         frame.repaint();
 
-        // FIX 3: let the layout settle fully before we snapshot positions
         SwingUtilities.invokeLater(() -> {
             Timer holdTimer = new Timer(2500, e ->
                 animateTitleToHeader(titlePanel, welcomeLabel, logoLabel, startLogoW)
@@ -131,16 +130,12 @@ public class MainMenu {
     }
 
     // ===================== SHRINK + PAN UP ANIMATION =====================
-    // FIX 3: Snapshot the ACTUAL rendered positions from the laid-out components,
-    //         so the first frame of animation is pixel-identical to the title card.
 
     private void animateTitleToHeader(BackgroundPanel titlePanel, JLabel welcomeLabel, JLabel logoLabel, int startLogoW) {
         int screenW = frame.getWidth();
-        int screenH = frame.getHeight();
 
-        // Snapshot real positions BEFORE switching to null layout
-        Point wPt   = SwingUtilities.convertPoint(welcomeLabel.getParent(), welcomeLabel.getLocation(), titlePanel);
-        Point lgPt  = SwingUtilities.convertPoint(logoLabel.getParent(),    logoLabel.getLocation(),    titlePanel);
+        Point wPt  = SwingUtilities.convertPoint(welcomeLabel.getParent(), welcomeLabel.getLocation(), titlePanel);
+        Point lgPt = SwingUtilities.convertPoint(logoLabel.getParent(),    logoLabel.getLocation(),    titlePanel);
 
         int startWX    = wPt.x;
         int startWY    = wPt.y;
@@ -148,7 +143,6 @@ public class MainMenu {
         int startLogoY = lgPt.y;
         int startLogoH = logoLabel.getHeight();
 
-        // Target sizes
         int targetLogoW = 320;
         int targetLogoH = (logoImage != null)
             ? (int) ((double) logoNaturalH / logoNaturalW * targetLogoW)
@@ -156,14 +150,12 @@ public class MainMenu {
 
         Dimension wDim = welcomeLabel.getPreferredSize();
 
-        // Target positions — just below toggle row (~36px tall)
-        int topPad      = 44;
-        int targetWY    = topPad;
-        int targetWX    = (screenW - wDim.width) / 2;
-        int targetLogoY = targetWY + wDim.height + 14;
-        int targetLogoX = (screenW - targetLogoW) / 2;
+        int topPad       = 44;
+        int targetWY     = topPad;
+        int targetWX     = (screenW - wDim.width) / 2;
+        int targetLogoY2 = targetWY + wDim.height + 14;
+        int targetLogoX2 = (screenW - targetLogoW) / 2;
 
-        // Switch to null layout — place components at their snapshotted positions first
         titlePanel.setLayout(null);
         welcomeLabel.setBounds(startWX, startWY, wDim.width, wDim.height);
         logoLabel.setBounds(startLogoX, startLogoY, startLogoW, startLogoH);
@@ -187,16 +179,13 @@ public class MainMenu {
 
             int curLogoW = (int) lerp(startLogoW, targetLogoW, t);
             int curLogoH = (int) lerp(startLogoH, targetLogoH, t);
-            int curLogoX = (int) lerp(startLogoX, targetLogoX, t);
-            int curLogoY = (int) lerp(startLogoY, targetLogoY, t);
-
-            // Keep welcome label always horizontally centered
-            int curWX = (screenW - wDim.width) / 2;
-            int curWY = (int) lerp(startWY, targetWY, t);
+            int curLogoX = (int) lerp(startLogoX, targetLogoX2, t);
+            int curLogoY = (int) lerp(startLogoY, targetLogoY2, t);
+            int curWX    = (screenW - wDim.width) / 2;
+            int curWY    = (int) lerp(startWY, targetWY, t);
 
             welcomeLabel.setBounds(curWX, curWY, wDim.width, wDim.height);
             logoLabel.setBounds(curLogoX, curLogoY, curLogoW, curLogoH);
-
             titlePanel.repaint();
         });
 
@@ -277,9 +266,20 @@ public class MainMenu {
     // ===================== ANIMATED BUTTON PANEL =====================
 
     private JPanel buildAnimatedButtonPanel() {
+        // KEY FIX: Override paintComponent to set a hard clip rect equal to the
+        // panel's own bounds. This makes children positioned outside (e.g. SCORE
+        // starting below the panel) truly invisible until they slide into view.
         JPanel clipPanel = new JPanel(null) {
             @Override
             public boolean isOptimizedDrawingEnabled() { return false; }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                // Clip painting strictly to this panel's visible area so that any
+                // button whose current bounds are outside the panel is not rendered.
+                g.setClip(0, 0, getWidth(), getHeight());
+                super.paintComponent(g);
+            }
         };
         clipPanel.setOpaque(false);
 
@@ -293,23 +293,40 @@ public class MainMenu {
         JButton[] buttons = new JButton[3];
         for (int i = 0; i < 3; i++) {
             buttons[i] = buildMenuButton(labels[i], descs[i]);
-            clipPanel.add(buttons[i]);
         }
 
-        Timer waitTimer = new Timer(50, null);
-        waitTimer.addActionListener(e -> {
-            if (clipPanel.getWidth() > 0 && clipPanel.getHeight() > 0) {
-                ((Timer) e.getSource()).stop();
-                animateButtonsIn(clipPanel, buttons);
+        // Park ALL buttons far off-screen BEFORE adding them to the panel.
+        // This prevents a single-frame flash where the SCORE button appears at (0,0)
+        // before the ComponentListener fires and repositions it.
+        for (JButton btn : buttons) {
+            btn.setBounds(-9999, -9999, 340, 150);
+        }
+
+        for (JButton btn : buttons) {
+            clipPanel.add(btn);
+        }
+
+        // Use a ComponentListener so we measure the panel after it gets its real size.
+        clipPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            private boolean animated = false;
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                if (!animated && clipPanel.getWidth() > 0 && clipPanel.getHeight() > 0) {
+                    animated = true;
+                    // Slight delay so layout settles fully before we snapshot sizes.
+                    Timer startDelay = new Timer(30, ev -> {
+                        ((Timer) ev.getSource()).stop();
+                        animateButtonsIn(clipPanel, buttons);
+                    });
+                    startDelay.setRepeats(false);
+                    startDelay.start();
+                }
             }
         });
-        waitTimer.start();
 
         return clipPanel;
     }
 
-    // FIX 1: Score button lag — start position is just off the bottom edge (panelH + 1),
-    //         animation stops cleanly, no double-set of final bounds.
     private void animateButtonsIn(JPanel clipPanel, JButton[] buttons) {
         int panelW = clipPanel.getWidth();
         int panelH = clipPanel.getHeight();
@@ -322,19 +339,22 @@ public class MainMenu {
         int scoreTargetX = centerX;
         int exitTargetX  = centerX + btnW + 40;
 
-        // Keep exact off-screen starts as float arrays so lerp is clean
-        final float startX0 = -btnW;
-        final float startY1 = panelH + 1;  // FIX 1: just 1px off bottom, not a full extra panelH
-        final float startX2 = panelW;
+        final float startX0 = -btnW;   // PLAY:  off left edge
+        final float startX2 = panelW;  // EXIT:  off right edge
 
+        // Store resting Y so hover-expand knows its anchor.
         buttons[0].putClientProperty("restingY", centerY);
         buttons[1].putClientProperty("restingY", centerY);
         buttons[2].putClientProperty("restingY", centerY);
 
-        // Park buttons at start positions, all invisible-ish until timer fires
-        buttons[0].setBounds((int) startX0, centerY,      btnW, btnH);
-        buttons[1].setBounds(scoreTargetX,  (int) startY1, btnW, btnH);
-        buttons[2].setBounds((int) startX2, centerY,      btnW, btnH);
+        // PLAY and EXIT start off-screen; SCORE starts at its final position, fully transparent.
+        buttons[0].setBounds((int) startX0, centerY, btnW, btnH);
+        buttons[1].setBounds(scoreTargetX,  centerY, btnW, btnH);
+        buttons[2].setBounds((int) startX2, centerY, btnW, btnH);
+
+        // SCORE fades in via a client property read inside paintComponent.
+        buttons[1].putClientProperty("fadeAlpha", 0.0f);
+        clipPanel.repaint();
 
         float[] progress = {0.0f};
 
@@ -346,20 +366,31 @@ public class MainMenu {
 
             float t = easeOut(progress[0]);
 
-            buttons[0].setBounds((int) lerp(startX0, playTargetX,  t), centerY, btnW, btnH);
-            buttons[1].setBounds(scoreTargetX, (int) lerp(startY1, centerY,     t), btnW, btnH);
-            buttons[2].setBounds((int) lerp(startX2, exitTargetX,  t), centerY, btnW, btnH);
+            // PLAY slides in from left
+            buttons[0].setBounds(
+                (int) lerp(startX0, playTargetX, t),
+                centerY, btnW, btnH);
+
+            // SCORE fades in at its final position
+            buttons[1].putClientProperty("fadeAlpha", t);
+            buttons[1].setBounds(scoreTargetX, centerY, btnW, btnH);
+
+            // EXIT slides in from right
+            buttons[2].setBounds(
+                (int) lerp(startX2, exitTargetX, t),
+                centerY, btnW, btnH);
 
             clipPanel.repaint();
 
-            if (done) ((Timer) e.getSource()).stop();
+            if (done) {
+                buttons[1].putClientProperty("fadeAlpha", null); // clear so normal paint takes over
+                ((Timer) e.getSource()).stop();
+            }
         });
         panTimer.start();
     }
 
-    // ===================== MENU BUTTON WITH HOVER EXPAND =====================
-    // FIX 4: 500 ms hover delay before expansion starts.
-    //         A pending timer is cancelled if the mouse leaves before it fires.
+    // ===================== MENU BUTTON =====================
 
     private JButton buildMenuButton(String label, String description) {
         final int collapsedH = 150;
@@ -369,30 +400,38 @@ public class MainMenu {
         JButton btn = new JButton() {
             @Override
             protected void paintComponent(Graphics g) {
+                // If a fadeAlpha is set (during intro animation), wrap everything in that alpha.
+                Object fa = getClientProperty("fadeAlpha");
                 Graphics2D g2 = (Graphics2D) g.create();
+                if (fa instanceof Float) {
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (Float) fa));
+                }
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
                 int w = getWidth(), h = getHeight();
 
+                // Button background
                 g2.setColor(getModel().isRollover() ? new Color(210, 155, 145) : new Color(190, 130, 120));
                 g2.fillRoundRect(10, 5, w - 20, h - 10, 25, 25);
 
-                float descAlpha   = getDescAlpha();
-                float expandProg  = getExpandProgress();
+                float descAlpha  = getDescAlpha();
+                float expandProg = getExpandProgress();
 
+                // Label text — MAROON
                 g2.setFont(new Font("Arial", Font.BOLD, 34));
-                g2.setColor(new Color(245, 230, 210));
+                g2.setColor(new Color(128, 0, 0));
                 FontMetrics fm = g2.getFontMetrics();
-                int textX = (w - fm.stringWidth(label)) / 2;
-
+                int textX     = (w - fm.stringWidth(label)) / 2;
                 int centeredY = (h - fm.getHeight()) / 2 + fm.getAscent();
                 int topY      = 36 + fm.getAscent();
                 int textY     = (int) lerp(centeredY, topY, expandProg);
                 g2.drawString(label, textX, textY);
 
+                // Description text — MAROON, fades in as button expands
                 if (descAlpha > 0.01f) {
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, descAlpha));
                     g2.setFont(new Font("Arial", Font.PLAIN, 19));
+                    g2.setColor(new Color(128, 0, 0));
                     FontMetrics fd = g2.getFontMetrics();
 
                     int hMargin = 48;
@@ -425,6 +464,10 @@ public class MainMenu {
             @Override
             protected void paintBorder(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
+                Object fa = getClientProperty("fadeAlpha");
+                if (fa instanceof Float) {
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (Float) fa));
+                }
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 int w = getWidth(), h = getHeight();
                 g2.setColor(new Color(120, 60, 60));
@@ -438,24 +481,19 @@ public class MainMenu {
         };
 
         btn.setFont(new Font("Arial", Font.BOLD, 34));
-        btn.setForeground(new Color(245, 230, 210));
+        btn.setForeground(new Color(128, 0, 0)); // maroon
         btn.setContentAreaFilled(false);
         btn.setBorderPainted(false);
         btn.setFocusPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.addActionListener(e -> handleMenuAction(label));
 
-        float[] currentH       = {collapsedH};
-        boolean[] expanding    = {false};   // FIX 4: true once the 500ms delay has fired
-        Timer[]   delayTimer   = {null};    // FIX 4: holds the pending delay so we can cancel it
+        float[] currentH = {collapsedH};
 
-        // Main animation ticker — runs always, but only expands when expanding[0] is true
         Timer hoverTimer = new Timer(16, e -> {
-            boolean hovered = btn.getModel().isRollover();
-
-            // Determine target based on hover state AND whether delay has elapsed
-            float targetH = (hovered && expanding[0]) ? expandedH : collapsedH;
-            float speed   = 6f;
+            boolean hovered  = btn.getModel().isRollover();
+            float   targetH  = hovered ? expandedH : collapsedH;
+            float   speed    = 12f;
 
             if (Math.abs(currentH[0] - targetH) < speed) {
                 currentH[0] = targetH;
@@ -479,30 +517,6 @@ public class MainMenu {
             }
         });
         hoverTimer.start();
-
-        // FIX 4: Mouse listeners manage the 500ms delay
-        btn.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                // Cancel any old pending timer
-                if (delayTimer[0] != null && delayTimer[0].isRunning()) delayTimer[0].stop();
-                expanding[0] = false;
-                // Start 500ms delay
-                delayTimer[0] = new Timer(500, ev -> {
-                    expanding[0] = true;
-                    ((Timer) ev.getSource()).stop();
-                });
-                delayTimer[0].setRepeats(false);
-                delayTimer[0].start();
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                // Cancel delay — button collapses immediately if mouse leaves before 500ms
-                if (delayTimer[0] != null && delayTimer[0].isRunning()) delayTimer[0].stop();
-                expanding[0] = false;
-            }
-        });
 
         return btn;
     }
@@ -536,7 +550,7 @@ public class MainMenu {
             gd.setFullScreenWindow(null);
             frame.dispose();
             frame.setUndecorated(false);
-            frame.setSize(1440, 900);   // FIX 2: wider window
+            frame.setSize(1440, 900);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
             isFullScreen = false;

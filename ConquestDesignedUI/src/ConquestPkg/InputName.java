@@ -25,7 +25,7 @@ public class InputName extends JFrame {
         setUndecorated(false);  // Windowed mode
         
         // Set windowed size and center it
-        setSize(1024, 768);
+        setSize(1200, 768);
         setLocationRelativeTo(null);
         
         // Only set up fullscreen capability, don't activate it
