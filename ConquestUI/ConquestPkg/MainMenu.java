@@ -8,116 +8,179 @@ public class MainMenu {
 
     public MainMenu(JFrame frame, String playerName) {
 
-        frame.setLayout(new GridBagLayout());
+        MusicPlayer.play("menu_music.wav");
+
         frame.getContentPane().removeAll();
+        frame.setLayout(new BorderLayout());
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.fill = GridBagConstraints.NONE;
+        // ── Fixed top header ──────────────────────────────────────
+        JPanel header = new JPanel();
+        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
+        header.setBorder(BorderFactory.createEmptyBorder(30, 0, 20, 0));
+        header.setOpaque(false);
 
-        // 🔥 Welcome Text
-        JLabel welcome = new JLabel("Welcome " + playerName);
-        welcome.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel welcome = new JLabel("Welcome " + playerName, JLabel.CENTER);
+        welcome.setFont(new Font("Arial", Font.BOLD, 36));
+        welcome.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        gbc.gridy = 0;
-        gbc.insets = new Insets(5, 10, 2, 10);
-        frame.add(welcome, gbc);
+        JLabel title = new JLabel("ConQuest!", JLabel.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 64));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // 🔥 Title
-        JLabel title = new JLabel("ConQuest!");
-        title.setFont(new Font("Arial", Font.BOLD, 40));
+        header.add(welcome);
+        header.add(Box.createRigidArea(new Dimension(0, 4)));
+        header.add(title);
 
-        gbc.gridy = 1;
-        gbc.insets = new Insets(0, 10, 15, 10);
-        frame.add(title, gbc);
+        // ── Buttons ───────────────────────────────────────────────
+        JPanel centerWrapper = new JPanel(new GridBagLayout());
+        centerWrapper.setOpaque(false);
 
-        // 🔥 Buttons Panel
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
+        buttonPanel.setOpaque(false);
 
-        JButton playBtn = new JButton("PLAY");
-        JButton scoreBtn = new JButton("SCORE");
-        JButton exitBtn = new JButton("EXIT");
+        HoverCard playCard  = new HoverCard("PLAY",
+                "<html><center>Test your knowledge!<br>Face the challenge and<br>prove your intellect now.</center></html>");
+        HoverCard scoreCard = new HoverCard("SCORES",
+                "<html><center>View the history<br>of your scores!</center></html>");
+        HoverCard exitCard  = new HoverCard("EXIT",
+                "<html><center>Why are you<br>Leaving dawg :(</center></html>");
 
-        Font btnFont = new Font("Arial", Font.BOLD, 18);
-        Dimension btnSize = new Dimension(130, 50);
+        buttonPanel.add(playCard);
+        buttonPanel.add(scoreCard);
+        buttonPanel.add(exitCard);
 
-        playBtn.setFont(btnFont);
-        scoreBtn.setFont(btnFont);
-        exitBtn.setFont(btnFont);
+        centerWrapper.add(buttonPanel);
 
-        playBtn.setPreferredSize(btnSize);
-        scoreBtn.setPreferredSize(btnSize);
-        exitBtn.setPreferredSize(btnSize);
+        frame.add(header, BorderLayout.NORTH);
+        frame.add(centerWrapper, BorderLayout.CENTER);
 
-        buttonPanel.add(playBtn);
-        buttonPanel.add(scoreBtn);
-        buttonPanel.add(exitBtn);
-
-        gbc.gridy = 2;
-        gbc.insets = new Insets(20, 10, 10, 10);
-        frame.add(buttonPanel, gbc);
-
-        // 🔥 Description Label (hover text)
-        JLabel description = new JLabel(" ");
-        description.setFont(new Font("Arial", Font.PLAIN, 16));
-        description.setHorizontalAlignment(JLabel.CENTER);
-
-        gbc.gridy = 3;
-        gbc.insets = new Insets(20, 10, 10, 10);
-        frame.add(description, gbc);
-
-        // 🔥 HOVER EFFECTS
-
-        playBtn.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                description.setText("Test your knowledge! Face the challenge and prove your intellect now.");
-            }
-
-            public void mouseExited(MouseEvent e) {
-                description.setText(" ");
-            }
-        });
-
-        scoreBtn.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                description.setText("View the history of your scores!");
-            }
-
-            public void mouseExited(MouseEvent e) {
-                description.setText(" ");
-            }
-        });
-
-        exitBtn.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                description.setText("Are you sure you want to quit?");
-            }
-
-            public void mouseExited(MouseEvent e) {
-                description.setText(" ");
-            }
-        });
-
-        // 🔥 BUTTON ACTIONS
-
-        // PLAY → QuizMenu
-        playBtn.addActionListener(e -> {
-            new QuizMenu(frame, playerName);
-        });
-
-        // SCORE
-        scoreBtn.addActionListener(e -> {
-            JOptionPane.showMessageDialog(frame, "View Scores here!");
-        });
-
-        // EXIT
-        exitBtn.addActionListener(e -> {
-            System.exit(0);
-        });
+        // ── Actions ───────────────────────────────────────────────
+        playCard.onClick(() -> new QuizMenu(frame, playerName));
+        scoreCard.onClick(() -> new QuizScores(frame, playerName));
+        exitCard.onClick(() -> System.exit(0));
 
         frame.revalidate();
         frame.repaint();
+    }
+
+    // ── Hover card (JPanel, not JButton) ─────────────────────────
+    static class HoverCard extends JPanel {
+
+        private static final int W          = 260;
+        private static final int H_CLOSED   = 100;
+        private static final int H_OPEN     = 220;
+        private static final int ARC        = 24;
+        private static final int ANIM_MS    = 10;
+
+        private final String label;
+        private final JLabel descLabel;
+
+        private int   curH  = H_CLOSED;
+        private float alpha = 0f;
+        private Timer anim;
+
+        HoverCard(String label, String desc) {
+            this.label = label;
+            setLayout(null);          // absolute positioning — no layout fights
+            setOpaque(false);
+            setPreferredSize(new Dimension(W, H_CLOSED));
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+            descLabel = new JLabel(desc, JLabel.CENTER) {
+                @Override protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+                    super.paintComponent(g2);
+                    g2.dispose();
+                }
+            };
+            descLabel.setFont(new Font("Arial", Font.PLAIN, 15));
+            descLabel.setHorizontalAlignment(JLabel.CENTER);
+            descLabel.setVerticalAlignment(JLabel.CENTER);
+            add(descLabel);
+
+            addMouseListener(new MouseAdapter() {
+                @Override public void mouseEntered(MouseEvent e) { animateTo(true); }
+                @Override public void mouseExited(MouseEvent e)  { animateTo(false); }
+            });
+        }
+
+        void onClick(Runnable action) {
+            addMouseListener(new MouseAdapter() {
+                @Override public void mouseClicked(MouseEvent e) { action.run(); }
+            });
+        }
+
+        private void animateTo(boolean open) {
+            if (anim != null && anim.isRunning()) anim.stop();
+            int targetH = open ? H_OPEN : H_CLOSED;
+            float targetA = open ? 1f : 0f;
+
+            anim = new Timer(ANIM_MS, null);
+            anim.addActionListener(e -> {
+                // height
+                int hDiff = targetH - curH;
+                int hStep = hDiff / 4;
+                if (hStep == 0) hStep = Integer.signum(hDiff);
+                curH += hStep;
+                if (Math.abs(targetH - curH) <= 1) curH = targetH;
+
+                // alpha
+                float aDiff = targetA - alpha;
+                float aStep = aDiff / 5f;
+                if (Math.abs(aStep) < 0.015f) aStep = Math.signum(aDiff) * 0.015f;
+                alpha += aStep;
+                alpha = Math.max(0f, Math.min(1f, alpha));
+                if (Math.abs(targetA - alpha) < 0.015f) alpha = targetA;
+
+                if (curH == targetH && alpha == targetA) anim.stop();
+
+                // reposition desc label inside the card
+                int descTop = H_CLOSED + 4;
+                int descH   = curH - descTop - 8;
+                descLabel.setBounds(8, descTop, W - 16, Math.max(0, descH));
+
+                setPreferredSize(new Dimension(W, curH));
+                revalidate();
+                repaint();
+                Container p = getParent();
+                if (p != null) { p.revalidate(); p.repaint(); }
+            });
+            anim.start();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            // background
+            Color bg = (alpha > 0) ? new Color(173, 216, 230) : UIManager.getColor("Panel.background");
+            if (bg == null) bg = new Color(238, 238, 238);
+            // blend toward hover color based on alpha
+            Color base = UIManager.getColor("Panel.background");
+            if (base == null) base = new Color(238, 238, 238);
+            int r = (int)(base.getRed()   + (173 - base.getRed())   * alpha);
+            int gv= (int)(base.getGreen() + (216 - base.getGreen()) * alpha);
+            int b = (int)(base.getBlue()  + (230 - base.getBlue())  * alpha);
+            g2.setColor(new Color(r, gv, b));
+            g2.fillRoundRect(0, 0, getWidth(), curH, ARC, ARC);
+
+            // border
+            g2.setColor(Color.DARK_GRAY);
+            g2.setStroke(new BasicStroke(2));
+            g2.drawRoundRect(1, 1, getWidth() - 2, curH - 2, ARC, ARC);
+
+            // button label — always centered in the top H_CLOSED strip
+            g2.setFont(new Font("Arial", Font.BOLD, 28));
+            g2.setColor(Color.BLACK);
+            FontMetrics fm = g2.getFontMetrics();
+            int tx = (getWidth() - fm.stringWidth(label)) / 2;
+            int ty = H_CLOSED / 2 + fm.getAscent() / 2 - 2;
+            g2.drawString(label, tx, ty);
+
+            g2.dispose();
+        }
     }
 }

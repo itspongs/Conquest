@@ -30,14 +30,40 @@
 
         // METHOD 2: Components
         public void createComponents() {
-            nameField = new JTextField(15);
+            nameField = new JTextField(25);
             proceedBtn = new JButton("Proceed");
 
+            // Placeholder behavior
+            nameField.setText("Enter Player Name");
+            nameField.setForeground(Color.GRAY);
+            nameField.addFocusListener(new java.awt.event.FocusAdapter() {
+                @Override
+                public void focusGained(java.awt.event.FocusEvent e) {
+                    if (nameField.getText().equals("Enter Player Name")) {
+                        nameField.setText("");
+                        nameField.setForeground(Color.BLACK);
+                    }
+                }
+                @Override
+                public void focusLost(java.awt.event.FocusEvent e) {
+                    if (nameField.getText().isEmpty()) {
+                        nameField.setText("Enter Player Name");
+                        nameField.setForeground(Color.GRAY);
+                    }
+                }
+            });
+
             // Styling
-            nameField.setHorizontalAlignment(JTextField.CENTER);
-            nameField.setFont(new Font("Arial", Font.PLAIN, 30));
-            proceedBtn.setFont(new Font("Arial", Font.BOLD, 25));
-            proceedBtn.setPreferredSize(new Dimension(220, 60));
+            nameField.setHorizontalAlignment(JTextField.LEFT);
+            nameField.setFont(new Font("Arial", Font.PLAIN, 26));
+            nameField.setPreferredSize(new Dimension(480, 60));
+            nameField.setBorder(BorderFactory.createCompoundBorder(
+                    new RoundedBorder(Color.GRAY, 2, 10),
+                    BorderFactory.createEmptyBorder(5, 12, 5, 12)
+            ));
+
+            proceedBtn.setFont(new Font("Arial", Font.BOLD, 22));
+            proceedBtn.setPreferredSize(new Dimension(480, 65));
             proceedBtn.setBorder(BorderFactory.createCompoundBorder(
                     new RoundedBorder(Color.GRAY, 2, 16),
                     BorderFactory.createEmptyBorder(10, 20, 10, 20)
@@ -59,29 +85,24 @@
 
         // METHOD 3: Add Components (CENTERED)
         public void addComponents() {
-            GridBagConstraints gbc = new GridBagConstraints();
+            JPanel group = new JPanel();
+            group.setLayout(new BoxLayout(group, BoxLayout.Y_AXIS));
 
-            gbc.gridx = 0;
-            gbc.insets = new Insets(10, 10, 10, 10);
-            gbc.weightx = 1;
-            gbc.weighty = 1;
-            gbc.anchor = GridBagConstraints.CENTER;
-            gbc.fill = GridBagConstraints.NONE;
+            JLabel label = new JLabel("Player Name");
+            label.setFont(new Font("Arial", Font.BOLD, 24));
+            label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-            // TITLE
-            JLabel title = new JLabel("Input Player Name", JLabel.CENTER);
-            title.setFont(new Font("Arial", Font.BOLD, 27));
+            nameField.setAlignmentX(Component.LEFT_ALIGNMENT);
+            proceedBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-            gbc.gridy = 0;
-            frame.add(title, gbc);
+            group.add(label);
+            group.add(Box.createRigidArea(new Dimension(0, 6)));
+            group.add(nameField);
+            group.add(Box.createRigidArea(new Dimension(0, 12)));
+            group.add(proceedBtn);
 
-            // TEXT FIELD
-            gbc.gridy = 1;
-            frame.add(nameField, gbc);
-
-            // BUTTON
-            gbc.gridy = 2;
-            frame.add(proceedBtn, gbc);
+            frame.setLayout(new GridBagLayout());
+            frame.add(group, new GridBagConstraints());
         }
 
         // METHOD 4: Actions
@@ -91,9 +112,9 @@
 
         // METHOD 5: Logic
         public void handleProceed() {
-            String playerName = nameField.getText();
+            String playerName = nameField.getText().trim();
 
-            if (playerName.isEmpty()) {
+            if (playerName.isEmpty() || playerName.equals("Enter Player Name")) {
                 JOptionPane.showMessageDialog(frame, "Please enter your name!");
             } else {
                 // 🔥 DO NOT DISPOSE FRAME

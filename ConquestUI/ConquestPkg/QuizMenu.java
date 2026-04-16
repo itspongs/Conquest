@@ -1,6 +1,7 @@
 package ConquestPkg;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 public class QuizMenu {
@@ -10,106 +11,260 @@ public class QuizMenu {
         frame.getContentPane().removeAll();
         frame.setLayout(new BorderLayout());
 
-        // 🔥 OUTER PANEL (adds margin like your image)
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        JPanel main = new JPanel(new BorderLayout());
+        main.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+        main.setOpaque(false);
 
-        // 🔥 TOP: Welcome
+        // ── TOP: Welcome ──────────────────────────────────────────
         JLabel welcome = new JLabel("Welcome " + playerName, JLabel.CENTER);
-        welcome.setFont(new Font("Arial", Font.BOLD, 20));
-        mainPanel.add(welcome, BorderLayout.NORTH);
+        welcome.setFont(new Font("Arial", Font.BOLD, 22));
+        main.add(welcome, BorderLayout.NORTH);
 
-        // ================= CENTER AREA =================
-        JPanel centerPanel = new JPanel(new BorderLayout());
+        // ── CENTER ────────────────────────────────────────────────
+        JPanel middle = new JPanel(new BorderLayout(40, 0));
+        middle.setOpaque(false);
+        middle.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0));
 
-        // 🔥 LEFT BUTTONS
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new GridLayout(3, 1, 10, 15));
+        // Left column
+        HoverCategoryBtn geoBtn   = new HoverCategoryBtn("Geography");
+        HoverCategoryBtn driveBtn = new HoverCategoryBtn("Driving");
+        HoverCategoryBtn mediaBtn = new HoverCategoryBtn("Media");
+        JPanel leftCol = makeColumn(geoBtn, driveBtn, mediaBtn);
 
-        JButton geoBtn = new JButton("Geography");
-        JButton driveBtn = new JButton("Driving");
-        JButton mediaBtn = new JButton("Media");
-
-        // 🔥 RIGHT BUTTONS
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new GridLayout(3, 1, 10, 15));
-
-        JButton genBtn = new JButton("<html><center>General<br>Knowledge</center></html>");
-        JButton brainBtn = new JButton("Brainrot");
-        JButton progBtn = new JButton("Programming");
-
-        JButton[] buttons = {
-            geoBtn, driveBtn, mediaBtn,
-            genBtn, brainBtn, progBtn
-        };
-
-        // 🔥 BUTTON STYLE
-        Font btnFont = new Font("Arial", Font.PLAIN, 16);
-        Dimension btnSize = new Dimension(160, 45);
-
-        for (JButton btn : buttons) {
-            btn.setFont(btnFont);
-            btn.setPreferredSize(btnSize);
-            btn.setFocusPainted(false);
-        }
-
-        leftPanel.add(geoBtn);
-        leftPanel.add(driveBtn);
-        leftPanel.add(mediaBtn);
-
-        rightPanel.add(genBtn);
-        rightPanel.add(brainBtn);
-        rightPanel.add(progBtn);
-
-        // 🔥 TITLE
+        // Center title
         JLabel title = new JLabel("ConQuest", JLabel.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 40));
+        title.setFont(new Font("Arial", Font.BOLD, 64));
 
-        JPanel titlePanel = new JPanel(new BorderLayout());
-        titlePanel.add(title, BorderLayout.CENTER);
+        JLabel chooseSub = new JLabel("Choose which quiz will you be taking!", JLabel.CENTER);
+        chooseSub.setFont(new Font("Arial", Font.PLAIN, 14));
+        chooseSub.setForeground(Color.DARK_GRAY);
 
-        JPanel middleWrapper = new JPanel(new BorderLayout(30, 0));
-        middleWrapper.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
+        JPanel titlePanel = new JPanel(new GridBagLayout());
+        titlePanel.setOpaque(false);
+        JPanel titleStack = new JPanel();
+        titleStack.setLayout(new BoxLayout(titleStack, BoxLayout.Y_AXIS));
+        titleStack.setOpaque(false);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        chooseSub.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleStack.add(title);
+        titleStack.add(Box.createRigidArea(new Dimension(0, 4)));
+        titleStack.add(chooseSub);
+        titlePanel.add(titleStack);
 
-        middleWrapper.add(leftPanel, BorderLayout.WEST);
-        middleWrapper.add(titlePanel, BorderLayout.CENTER);
-        middleWrapper.add(rightPanel, BorderLayout.EAST);
+        // Right column
+        HoverCategoryBtn genBtn   = new HoverCategoryBtn("General Knowledge");
+        HoverCategoryBtn brainBtn = new HoverCategoryBtn("Brainrot");
+        HoverCategoryBtn progBtn  = new HoverCategoryBtn("Programming");
+        JPanel rightCol = makeColumn(genBtn, brainBtn, progBtn);
 
-        centerPanel.add(middleWrapper, BorderLayout.CENTER);
+        middle.add(leftCol,    BorderLayout.WEST);
+        middle.add(titlePanel, BorderLayout.CENTER);
+        middle.add(rightCol,   BorderLayout.EAST);
+        main.add(middle, BorderLayout.CENTER);
 
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        // ── BOTTOM: Back ──────────────────────────────────────────
+        JButton backBtn = makeBackBtn("Back");
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        bottom.setOpaque(false);
+        bottom.add(backBtn);
+        main.add(bottom, BorderLayout.SOUTH);
 
-        // ================= BOTTOM =================
-        JButton backBtn = new JButton("Back");
-        backBtn.setFont(new Font("Arial", Font.PLAIN, 16));
-        backBtn.setPreferredSize(new Dimension(120, 40));
+        frame.add(main, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.add(backBtn);
-
-        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
-
-        // 🔥 ADD TO FRAME
-        frame.add(mainPanel, BorderLayout.CENTER);
-
-        // ================= ACTIONS =================
-
-        backBtn.addActionListener(e -> {
-            new MainMenu(frame, playerName);
-        });
-
-        geoBtn.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Geography Quiz"));
-        mediaBtn.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Media Quiz"));
-        genBtn.addActionListener(e -> JOptionPane.showMessageDialog(frame, "General Knowledge Quiz"));
-        brainBtn.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Brainrot Quiz"));
-        progBtn.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Programming Quiz"));
-
-        // 🚗 FIXED: Driving button opens DrivingQuiz
-        driveBtn.addActionListener(e -> {
-            new DrivingQuiz(frame, playerName);
-        });
+        // ── Actions ───────────────────────────────────────────────
+        backBtn.addActionListener(e  -> new MainMenu(frame, playerName));
+        driveBtn.addActionListener(e -> new DrivingQuiz(frame, playerName));
+        geoBtn.addActionListener(e   -> JOptionPane.showMessageDialog(frame, "Geography — Coming Soon!"));
+        mediaBtn.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Media — Coming Soon!"));
+        genBtn.addActionListener(e   -> JOptionPane.showMessageDialog(frame, "General Knowledge — Coming Soon!"));
+        brainBtn.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Brainrot — Coming Soon!"));
+        progBtn.addActionListener(e  -> JOptionPane.showMessageDialog(frame, "Programming — Coming Soon!"));
 
         frame.revalidate();
         frame.repaint();
+    }
+
+    // Builds a vertically-centered column that gives each button room to expand downward
+    private JPanel makeColumn(HoverCategoryBtn b1, HoverCategoryBtn b2, HoverCategoryBtn b3) {
+        // Use GridBagLayout so the column itself is vertically centered in the middle strip
+        JPanel outer = new JPanel(new GridBagLayout());
+        outer.setOpaque(false);
+
+        // Inner panel uses BoxLayout but with overflow allowed via a plain panel wrapper
+        JPanel inner = new JPanel() {
+            @Override public Dimension getPreferredSize() {
+                // height = sum of current button heights + gaps
+                int h = b1.curH + b2.curH + b3.curH + 16 * 2;
+                return new Dimension(HoverCategoryBtn.W, h);
+            }
+            @Override public void doLayout() {
+                int y = 0;
+                b1.setBounds(0, y, HoverCategoryBtn.W, b1.curH); y += b1.curH + 16;
+                b2.setBounds(0, y, HoverCategoryBtn.W, b2.curH); y += b2.curH + 16;
+                b3.setBounds(0, y, HoverCategoryBtn.W, b3.curH);
+            }
+        };
+        inner.setLayout(null);
+        inner.setOpaque(false);
+        inner.add(b1);
+        inner.add(b2);
+        inner.add(b3);
+
+        // When any button animates, tell the inner panel to re-layout
+        Runnable relayout = () -> {
+            inner.revalidate();
+            inner.repaint();
+            outer.revalidate();
+            outer.repaint();
+        };
+        b1.onAnimate = relayout;
+        b2.onAnimate = relayout;
+        b3.onAnimate = relayout;
+
+        outer.add(inner);
+        return outer;
+    }
+
+    private JButton makeBackBtn(String text) {
+        JButton btn = new JButton(text) {
+            private boolean hovered = false;
+            {
+                addMouseListener(new MouseAdapter() {
+                    public void mouseEntered(MouseEvent e) { hovered = true;  repaint(); }
+                    public void mouseExited(MouseEvent e)  { hovered = false; repaint(); }
+                });
+            }
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                Color bg = hovered ? new Color(173, 216, 230) : UIManager.getColor("Panel.background");
+                if (bg == null) bg = new Color(238, 238, 238);
+                g2.setColor(bg); g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+                g2.setColor(Color.DARK_GRAY); g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 30, 30);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        btn.setFont(new Font("Arial", Font.BOLD, 18));
+        btn.setPreferredSize(new Dimension(160, 50));
+        btn.setContentAreaFilled(false); btn.setOpaque(false);
+        btn.setFocusPainted(false); btn.setBorderPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return btn;
+    }
+
+    // ── Hover-expand category button ──────────────────────────────
+    static class HoverCategoryBtn extends JPanel {
+
+        static final int W        = 280;
+        static final int H_CLOSED = 70;
+        static final int H_OPEN   = 140;
+        private static final int ARC     = 30;
+        private static final int ANIM_MS = 10;
+
+        private final String category;
+        private final JLabel descLabel;
+
+        int   curH  = H_CLOSED;
+        float alpha = 0f;
+        Runnable onAnimate;
+
+        private Timer anim;
+
+        HoverCategoryBtn(String category) {
+            this.category = category;
+            setLayout(null);
+            setOpaque(false);
+            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+            descLabel = new JLabel("<html><center>Press to Take<br>" + category + " Quiz!</center></html>", JLabel.CENTER) {
+                @Override protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+                    super.paintComponent(g2);
+                    g2.dispose();
+                }
+            };
+            descLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+            descLabel.setHorizontalAlignment(JLabel.CENTER);
+            descLabel.setVerticalAlignment(JLabel.CENTER);
+            add(descLabel);
+
+            addMouseListener(new MouseAdapter() {
+                @Override public void mouseEntered(MouseEvent e) { animateTo(true); }
+                @Override public void mouseExited(MouseEvent e)  { animateTo(false); }
+            });
+        }
+
+        void addActionListener(ActionListener l) {
+            addMouseListener(new MouseAdapter() {
+                @Override public void mouseClicked(MouseEvent e) {
+                    l.actionPerformed(new ActionEvent(HoverCategoryBtn.this, ActionEvent.ACTION_PERFORMED, ""));
+                }
+            });
+        }
+
+        private void animateTo(boolean open) {
+            if (anim != null && anim.isRunning()) anim.stop();
+            int targetH   = open ? H_OPEN : H_CLOSED;
+            float targetA = open ? 1f : 0f;
+
+            anim = new Timer(ANIM_MS, null);
+            anim.addActionListener(e -> {
+                int hDiff = targetH - curH;
+                int hStep = hDiff / 4;
+                if (hStep == 0) hStep = Integer.signum(hDiff);
+                curH += hStep;
+                if (Math.abs(targetH - curH) <= 1) curH = targetH;
+
+                float aDiff = targetA - alpha;
+                float aStep = aDiff / 5f;
+                if (Math.abs(aStep) < 0.02f) aStep = Math.signum(aDiff) * 0.02f;
+                alpha += aStep;
+                alpha = Math.max(0f, Math.min(1f, alpha));
+                if (Math.abs(targetA - alpha) < 0.02f) alpha = targetA;
+
+                if (curH == targetH && alpha == targetA) anim.stop();
+
+                // position desc label in the expanded area
+                descLabel.setBounds(4, H_CLOSED + 2, W - 8, Math.max(0, curH - H_CLOSED - 8));
+
+                repaint();
+                if (onAnimate != null) onAnimate.run();
+            });
+            anim.start();
+        }
+
+        @Override
+        public Dimension getPreferredSize() { return new Dimension(W, curH); }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            Color base = UIManager.getColor("Panel.background");
+            if (base == null) base = new Color(238, 238, 238);
+            int r  = (int)(base.getRed()   + (173 - base.getRed())   * alpha);
+            int gv = (int)(base.getGreen() + (216 - base.getGreen()) * alpha);
+            int b  = (int)(base.getBlue()  + (230 - base.getBlue())  * alpha);
+            g2.setColor(new Color(r, gv, b));
+            g2.fillRoundRect(0, 0, W, curH, ARC, ARC);
+
+            g2.setColor(Color.DARK_GRAY);
+            g2.setStroke(new BasicStroke(2));
+            g2.drawRoundRect(1, 1, W - 2, curH - 2, ARC, ARC);
+
+            g2.setFont(new Font("Arial", Font.PLAIN, 20));
+            g2.setColor(Color.BLACK);
+            FontMetrics fm = g2.getFontMetrics();
+            int tx = (W - fm.stringWidth(category)) / 2;
+            int ty = H_CLOSED / 2 + fm.getAscent() / 2 - 2;
+            g2.drawString(category, tx, ty);
+
+            g2.dispose();
+        }
     }
 }
