@@ -37,30 +37,31 @@ public class DrivingQuiz {
         loadQuestions();
 
         frame.getContentPane().removeAll();
-        frame.setLayout(new BorderLayout());
 
+        // ── Background ────────────────────────────────────────────
+        JPanel bg = makeBg();
+        bg.setLayout(new BorderLayout());
 
+        // ── Title ─────────────────────────────────────────────────
         JLabel title = new JLabel("ConQuest", JLabel.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 64));
+        title.setForeground(Color.WHITE);
         title.setBorder(BorderFactory.createEmptyBorder(28, 0, 16, 0));
 
+        // ── Two frosted boxes ─────────────────────────────────────
         JPanel boxRow = new JPanel(new GridLayout(1, 2, 40, 0));
         boxRow.setOpaque(false);
         boxRow.setBorder(BorderFactory.createEmptyBorder(0, 60, 40, 60));
 
-        JPanel funFactBox = new JPanel(new GridBagLayout());
-        funFactBox.setBorder(BorderFactory.createCompoundBorder(
-                new RoundedBorder(Color.DARK_GRAY, 2, 24),
-                BorderFactory.createEmptyBorder(24, 28, 24, 28)
-        ));
-        funFactBox.setOpaque(false);
-
+        // Left box — Fun Fact
+        JPanel funFactBox = makeFrostedBox();
         JPanel funFactInner = new JPanel();
         funFactInner.setLayout(new BoxLayout(funFactInner, BoxLayout.Y_AXIS));
         funFactInner.setOpaque(false);
 
         JLabel catLabel = new JLabel("Category: Driving");
         catLabel.setFont(new Font("Arial", Font.BOLD, 26));
+        catLabel.setForeground(Color.WHITE);
         catLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel funFactText = new JLabel(
@@ -68,7 +69,8 @@ public class DrivingQuiz {
             + "100% Accurate from the LTO Theoretical<br>"
             + "Examination as of July 2025.</html>"
         );
-        funFactText.setFont(new Font("Arial", Font.PLAIN, 20));
+        funFactText.setFont(new Font("Arial", Font.PLAIN, 18));
+        funFactText.setForeground(new Color(255, 220, 220));
         funFactText.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         funFactInner.add(catLabel);
@@ -76,19 +78,15 @@ public class DrivingQuiz {
         funFactInner.add(funFactText);
         funFactBox.add(funFactInner);
 
-        JPanel confirmBox = new JPanel(new GridBagLayout());
-        confirmBox.setBorder(BorderFactory.createCompoundBorder(
-                new RoundedBorder(Color.DARK_GRAY, 2, 24),
-                BorderFactory.createEmptyBorder(24, 28, 24, 28)
-        ));
-        confirmBox.setOpaque(false);
-
+        // Right box — Confirmation
+        JPanel confirmBox = makeFrostedBox();
         JPanel confirmInner = new JPanel();
         confirmInner.setLayout(new BoxLayout(confirmInner, BoxLayout.Y_AXIS));
         confirmInner.setOpaque(false);
 
         JLabel confirmText = new JLabel("<html><center>Would you like to<br>start the quiz?</center></html>", JLabel.CENTER);
         confirmText.setFont(new Font("Arial", Font.BOLD, 26));
+        confirmText.setForeground(Color.WHITE);
         confirmText.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton yesBtn = makeRoundBtn("Yes");
@@ -104,14 +102,54 @@ public class DrivingQuiz {
         boxRow.add(funFactBox);
         boxRow.add(confirmBox);
 
-        frame.add(title, BorderLayout.NORTH);
-        frame.add(boxRow, BorderLayout.CENTER);
+        bg.add(title, BorderLayout.NORTH);
+        bg.add(boxRow, BorderLayout.CENTER);
+
+        frame.setContentPane(bg);
 
         yesBtn.addActionListener(e -> showLoadingScreen());
         noBtn.addActionListener(e -> new QuizMenu(frame, playerName));
 
         frame.revalidate();
         frame.repaint();
+    }
+
+    // ── Shared background panel ───────────────────────────────────
+    private JPanel makeBg() {
+        return new JPanel() {
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setPaint(new GradientPaint(0, 0, new Color(139, 0, 0),
+                                              getWidth(), getHeight(), new Color(80, 0, 0)));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                int cx = getWidth()/2, cy = getHeight()/2;
+                float r = Math.max(getWidth(), getHeight()) * 0.6f;
+                g2.setPaint(new RadialGradientPaint(cx, cy, r,
+                    new float[]{0f, 0.5f, 1f},
+                    new Color[]{new Color(200,50,50,80), new Color(139,0,0,40), new Color(80,0,0,0)}
+                ));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.dispose();
+            }
+        };
+    }
+
+    // ── Frosted glass box ─────────────────────────────────────────
+    private JPanel makeFrostedBox() {
+        JPanel box = new JPanel(new GridBagLayout()) {
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(255, 255, 255, 25));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 24, 24);
+                g2.setColor(new Color(255, 255, 255, 60));
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 24, 24);
+                g2.dispose();
+            }
+        };
+        box.setOpaque(false);
+        return box;
     }
 
     private JButton makeRoundBtn(String text) {
@@ -126,18 +164,17 @@ public class DrivingQuiz {
             @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                Color bg = hovered ? new Color(173, 216, 230) : UIManager.getColor("Panel.background");
-                if (bg == null) bg = new Color(238, 238, 238);
-                g2.setColor(bg);
+                g2.setColor(hovered ? new Color(210, 110, 110) : new Color(188, 74, 74));
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 24, 24);
-                g2.setColor(Color.DARK_GRAY);
-                g2.setStroke(new BasicStroke(2));
+                g2.setColor(new Color(0,0,0,40));
+                g2.setStroke(new BasicStroke(1.5f));
                 g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 24, 24);
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
         btn.setFont(new Font("Arial", Font.BOLD, 20));
+        btn.setForeground(Color.WHITE);
         btn.setPreferredSize(new Dimension(200, 56));
         btn.setMaximumSize(new Dimension(200, 56));
         btn.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -153,42 +190,60 @@ public class DrivingQuiz {
 
         MusicPlayer.stop();
 
-        JPanel loadingPanel = new JPanel(new BorderLayout());
+        frame.getContentPane().removeAll();
 
-        JPanel textPanel = new JPanel();
-        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+        JPanel bg = makeBg();
+        bg.setLayout(new GridBagLayout());
+
+        JPanel card = new JPanel() {
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(255, 255, 255, 25));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 28, 28);
+                g2.setColor(new Color(255, 255, 255, 60));
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 28, 28);
+                g2.dispose();
+            }
+        };
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setOpaque(false);
+        card.setPreferredSize(new Dimension(420, 300));
+        card.setBorder(BorderFactory.createEmptyBorder(36, 50, 36, 50));
 
         JLabel title = new JLabel("ConQuest");
-        title.setFont(new Font("Arial", Font.BOLD, 42));
+        title.setFont(new Font("Arial", Font.BOLD, 48));
+        title.setForeground(Color.WHITE);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel category = new JLabel("Category: Driving");
         category.setFont(new Font("Arial", Font.BOLD, 20));
+        category.setForeground(new Color(255, 200, 200));
+        category.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel loading = new JLabel("Loading...");
-        loading.setFont(new Font("Arial", Font.PLAIN, 20));
+        loading.setFont(new Font("Arial", Font.PLAIN, 18));
+        loading.setForeground(new Color(255, 220, 220));
+        loading.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel goodLuck = new JLabel("Good luck!");
-        goodLuck.setFont(new Font("Arial", Font.PLAIN, 20));
-
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        category.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loading.setAlignmentX(Component.CENTER_ALIGNMENT);
+        goodLuck.setFont(new Font("Arial", Font.BOLD, 22));
+        goodLuck.setForeground(Color.WHITE);
         goodLuck.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        textPanel.add(Box.createVerticalGlue());
-        textPanel.add(title);
-        textPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-        textPanel.add(category);
-        textPanel.add(Box.createRigidArea(new Dimension(0, 40)));
-        textPanel.add(loading);
-        textPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-        textPanel.add(goodLuck);
-        textPanel.add(Box.createVerticalGlue());
+        card.add(Box.createVerticalGlue());
+        card.add(title);
+        card.add(Box.createRigidArea(new Dimension(0, 8)));
+        card.add(category);
+        card.add(Box.createRigidArea(new Dimension(0, 36)));
+        card.add(loading);
+        card.add(Box.createRigidArea(new Dimension(0, 10)));
+        card.add(goodLuck);
+        card.add(Box.createVerticalGlue());
 
-        loadingPanel.add(textPanel, BorderLayout.CENTER);
-
-        frame.getContentPane().removeAll();
-        frame.add(loadingPanel);
+        bg.add(card);
+        frame.setContentPane(bg);
         frame.revalidate();
         frame.repaint();
 

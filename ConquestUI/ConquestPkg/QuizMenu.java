@@ -9,91 +9,148 @@ public class QuizMenu {
     public QuizMenu(JFrame frame, String playerName) {
 
         frame.getContentPane().removeAll();
-        frame.setLayout(new BorderLayout());
 
-        JPanel main = new JPanel(new BorderLayout());
-        main.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
-        main.setOpaque(false);
+ 
+        JPanel bg = new JPanel(new BorderLayout()) {
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
 
+                g2.setPaint(new GradientPaint(0, 0, new Color(139, 0, 0),
+                                              getWidth(), getHeight(), new Color(80, 0, 0)));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                
+             
+                int cx = getWidth() / 2;
+                int cy = getHeight() / 2;
+                float radius = Math.max(getWidth(), getHeight()) * 0.6f;
+                g2.setPaint(new RadialGradientPaint(
+                    cx, cy, radius,
+                    new float[]{0.0f, 0.5f, 1.0f},
+                    new Color[]{
+                        new Color(200, 50, 50, 80),
+                        new Color(139, 0, 0, 40),
+                        new Color(80, 0, 0, 0)
+                    }
+                ));
+                g2.fillRect(0, 0, getWidth(), getHeight());
      
-        JLabel welcome = new JLabel("Welcome " + playerName, JLabel.CENTER);
-        welcome.setFont(new Font("Arial", Font.BOLD, 22));
-        main.add(welcome, BorderLayout.NORTH);
+                g2.setPaint(new RadialGradientPaint(
+                    cx, cy, radius * 1.2f,
+                    new float[]{0.6f, 1.0f},
+                    new Color[]{new Color(0,0,0,0), new Color(0,0,0,100)}
+                ));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                
+                g2.dispose();
+            }
+        };
+        bg.setOpaque(false);
 
-        JPanel middle = new JPanel(new BorderLayout(40, 0));
+        float[] floatOffset = { 0f };
+
+        JPanel titlePanel = new JPanel(new GridBagLayout());
+        titlePanel.setOpaque(false);
+
+        JPanel titleStack = new JPanel() {
+            @Override protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                int yOff = (int) floatOffset[0];
+
+                g2.setFont(new Font("Arial", Font.BOLD, 24));
+                g2.setColor(new Color(255, 200, 200));
+                FontMetrics fmW = g2.getFontMetrics();
+                String welcomeStr = "Welcome " + playerName;
+                int wx = (getWidth() - fmW.stringWidth(welcomeStr)) / 2;
+                int wy = 50 + yOff;
+                g2.drawString(welcomeStr, wx, wy);
+
+                g2.setFont(new Font("Arial", Font.BOLD, 72));
+                g2.setColor(Color.WHITE);
+                FontMetrics fmT = g2.getFontMetrics();
+                String titleStr = "ConQuest";
+                int tx = (getWidth() - fmT.stringWidth(titleStr)) / 2;
+                int ty = wy + fmW.getDescent() + 6 + fmT.getAscent();
+                g2.drawString(titleStr, tx, ty);
+
+                g2.setFont(new Font("Arial", Font.PLAIN, 15));
+                g2.setColor(new Color(255, 200, 200));
+                FontMetrics fmS = g2.getFontMetrics();
+                String subStr = "Choose which quiz will you be taking!";
+                int sx = (getWidth() - fmS.stringWidth(subStr)) / 2;
+                int sy = ty + fmT.getDescent() + 8 + fmS.getAscent();
+                g2.drawString(subStr, sx, sy);
+
+                g2.dispose();
+            }
+        };
+        titleStack.setOpaque(false);
+        titleStack.setPreferredSize(new Dimension(500, 200));
+        titlePanel.add(titleStack);
+
+        JPanel middle = new JPanel(new BorderLayout(50, 0));
         middle.setOpaque(false);
-        middle.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0));
+        middle.setBorder(BorderFactory.createEmptyBorder(0, 50, 10, 50));
 
         HoverCategoryBtn geoBtn   = new HoverCategoryBtn("Geography");
         HoverCategoryBtn driveBtn = new HoverCategoryBtn("Driving");
         HoverCategoryBtn mediaBtn = new HoverCategoryBtn("Media");
-        JPanel leftCol = makeColumn(geoBtn, driveBtn, mediaBtn);
-
-        JLabel title = new JLabel("ConQuest", JLabel.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 64));
-
-        JLabel chooseSub = new JLabel("Choose which quiz will you be taking!", JLabel.CENTER);
-        chooseSub.setFont(new Font("Arial", Font.PLAIN, 14));
-        chooseSub.setForeground(Color.DARK_GRAY);
-
-        JPanel titlePanel = new JPanel(new GridBagLayout());
-        titlePanel.setOpaque(false);
-        JPanel titleStack = new JPanel();
-        titleStack.setLayout(new BoxLayout(titleStack, BoxLayout.Y_AXIS));
-        titleStack.setOpaque(false);
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        chooseSub.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titleStack.add(title);
-        titleStack.add(Box.createRigidArea(new Dimension(0, 4)));
-        titleStack.add(chooseSub);
-        titlePanel.add(titleStack);
+        JPanel leftCol = makeColumn(geoBtn, driveBtn, mediaBtn, floatOffset);
 
         HoverCategoryBtn genBtn   = new HoverCategoryBtn("General Knowledge");
         HoverCategoryBtn brainBtn = new HoverCategoryBtn("Brainrot");
         HoverCategoryBtn progBtn  = new HoverCategoryBtn("Programming");
-        JPanel rightCol = makeColumn(genBtn, brainBtn, progBtn);
+        JPanel rightCol = makeColumn(genBtn, brainBtn, progBtn, floatOffset);
 
         middle.add(leftCol,    BorderLayout.WEST);
         middle.add(titlePanel, BorderLayout.CENTER);
         middle.add(rightCol,   BorderLayout.EAST);
-        main.add(middle, BorderLayout.CENTER);
 
         JButton backBtn = makeBackBtn("Back");
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
         bottom.setOpaque(false);
+        bottom.setBorder(BorderFactory.createEmptyBorder(0, 0, 16, 0));
         bottom.add(backBtn);
-        main.add(bottom, BorderLayout.SOUTH);
 
-        frame.add(main, BorderLayout.CENTER);
+        bg.add(titlePanel, BorderLayout.NORTH);
+        bg.add(middle,     BorderLayout.CENTER);
+        bg.add(bottom,     BorderLayout.SOUTH);
 
-
+        frame.setContentPane(bg);
 
         //TO THE ASSIGNED TASKERS
-        //
-        //
-        //
+        //ONCE YOU ARE FINISHED WITH YOUR CODES IN categoryQuiz.java
+        //REPLACE JOptionPane.showMessageDialog(frame, "Geography — Coming Soon!")); with --> new categoryQuiz(frame, playerName));
+
         backBtn.addActionListener(e  -> new MainMenu(frame, playerName));
         driveBtn.addActionListener(e -> new DrivingQuiz(frame, playerName));
+        brainBtn.addActionListener(e -> new BrainrotQuiz(frame, playerName));
         geoBtn.addActionListener(e   -> JOptionPane.showMessageDialog(frame, "Geography — Coming Soon!"));
         mediaBtn.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Media — Coming Soon!"));
         genBtn.addActionListener(e   -> JOptionPane.showMessageDialog(frame, "General Knowledge — Coming Soon!"));
-        brainBtn.addActionListener(e -> new BrainrotQuiz(frame, playerName));
         progBtn.addActionListener(e  -> JOptionPane.showMessageDialog(frame, "Programming — Coming Soon!"));
 
         frame.revalidate();
         frame.repaint();
+
+        float[] time = { 0f };
+        Timer floatAnim = new Timer(30, null);
+        floatAnim.addActionListener(e -> {
+            time[0] += 0.08f;
+            floatOffset[0] = (float) (Math.sin(time[0]) * 6);
+            titleStack.repaint();
+        });
+        floatAnim.start();
     }
 
-
-
-    private JPanel makeColumn(HoverCategoryBtn b1, HoverCategoryBtn b2, HoverCategoryBtn b3) {
-       
+    private JPanel makeColumn(HoverCategoryBtn b1, HoverCategoryBtn b2, HoverCategoryBtn b3, float[] floatOffset) {
         JPanel outer = new JPanel(new GridBagLayout());
         outer.setOpaque(false);
 
         JPanel inner = new JPanel() {
             @Override public Dimension getPreferredSize() {
-              
                 int h = b1.curH + b2.curH + b3.curH + 16 * 2;
                 return new Dimension(HoverCategoryBtn.W, h);
             }
@@ -136,19 +193,22 @@ public class QuizMenu {
             @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                Color bg = hovered ? new Color(173, 216, 230) : UIManager.getColor("Panel.background");
-                if (bg == null) bg = new Color(238, 238, 238);
-                g2.setColor(bg); g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
-                g2.setColor(Color.DARK_GRAY); g2.setStroke(new BasicStroke(2));
-                g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 30, 30);
+                g2.setColor(hovered ? new Color(210, 110, 110) : new Color(188, 74, 74));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 24, 24);
+                g2.setColor(new Color(0,0,0,40));
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 24, 24);
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
         btn.setFont(new Font("Arial", Font.BOLD, 18));
-        btn.setPreferredSize(new Dimension(160, 50));
-        btn.setContentAreaFilled(false); btn.setOpaque(false);
-        btn.setFocusPainted(false); btn.setBorderPainted(false);
+        btn.setForeground(Color.WHITE);
+        btn.setPreferredSize(new Dimension(170, 52));
+        btn.setContentAreaFilled(false);
+        btn.setOpaque(false);
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return btn;
     }
@@ -185,6 +245,7 @@ public class QuizMenu {
                 }
             };
             descLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+            descLabel.setForeground(Color.WHITE);
             descLabel.setHorizontalAlignment(JLabel.CENTER);
             descLabel.setVerticalAlignment(JLabel.CENTER);
             add(descLabel);
@@ -242,20 +303,22 @@ public class QuizMenu {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            Color base = UIManager.getColor("Panel.background");
-            if (base == null) base = new Color(238, 238, 238);
-            int r  = (int)(base.getRed()   + (173 - base.getRed())   * alpha);
-            int gv = (int)(base.getGreen() + (216 - base.getGreen()) * alpha);
-            int b  = (int)(base.getBlue()  + (230 - base.getBlue())  * alpha);
-            g2.setColor(new Color(r, gv, b));
+            float a = alpha;
+            Color base   = new Color(255, 255, 255, 30);
+            Color hovered = new Color(210, 110, 110);
+            int r  = (int)(base.getRed()   + (hovered.getRed()   - base.getRed())   * a);
+            int gv = (int)(base.getGreen() + (hovered.getGreen() - base.getGreen()) * a);
+            int b  = (int)(base.getBlue()  + (hovered.getBlue()  - base.getBlue())  * a);
+            int al = (int)(30             + (255 - 30)                              * a);
+            g2.setColor(new Color(r, gv, b, Math.min(255, al)));
             g2.fillRoundRect(0, 0, W, curH, ARC, ARC);
 
-            g2.setColor(Color.DARK_GRAY);
-            g2.setStroke(new BasicStroke(2));
+            g2.setColor(new Color(255, 255, 255, 80));
+            g2.setStroke(new BasicStroke(1.5f));
             g2.drawRoundRect(1, 1, W - 2, curH - 2, ARC, ARC);
 
             g2.setFont(new Font("Arial", Font.PLAIN, 20));
-            g2.setColor(Color.BLACK);
+            g2.setColor(Color.WHITE);
             FontMetrics fm = g2.getFontMetrics();
             int tx = (W - fm.stringWidth(category)) / 2;
             int ty = H_CLOSED / 2 + fm.getAscent() / 2 - 2;

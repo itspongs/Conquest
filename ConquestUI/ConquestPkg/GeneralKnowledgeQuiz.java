@@ -69,7 +69,7 @@ public class GeneralKnowledgeQuiz {
         //REPLACE THE TEXT DEPENDS THE SIZE OF YOUR SENTENCE
 
         JLabel funFactText = new JLabel(
-            "<html><br>Fun Fact: 28% of these questions are<br>"
+            "<html><br>The term \\\"Brainrot\\\" refers to the mental state caused by consuming excessive amounts of low-quality internet content!<br>"
             + "100% Accurate from the LTO Theoretical<br>"
             + "Examination as of July 2025.</html>"
         );

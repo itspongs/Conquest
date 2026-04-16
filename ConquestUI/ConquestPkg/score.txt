@@ -1,6 +1,42 @@
-Player: zawie
-Category: Brainrot
-Score: 9/30
+Player: Pongs
+Category: Driving
+Score: 8/30
 Date: April 16, 2026
-Time: 03:30 PM
+Time: 09:40 PM
+-----------------------------
+Player: Pongs
+Category: Brainrot
+Score: 24/30
+Date: April 16, 2026
+Time: 10:11 PM
+-----------------------------
+Player: asdsa
+Category: Driving
+Score: 10/30
+Date: April 16, 2026
+Time: 10:49 PM
+-----------------------------
+Player: asd
+Category: Brainrot
+Score: 4/30
+Date: April 16, 2026
+Time: 10:57 PM
+-----------------------------
+Player: dasdasd
+Category: Driving
+Score: 7/30
+Date: April 16, 2026
+Time: 11:07 PM
+-----------------------------
+Player: dasdasd
+Category: Brainrot
+Score: 10/30
+Date: April 16, 2026
+Time: 11:09 PM
+-----------------------------
+Player: asd
+Category: Brainrot
+Score: 15/30
+Date: April 16, 2026
+Time: 11:28 PM
 -----------------------------
