@@ -29,6 +29,7 @@ public class DrivingQuiz {
     private int score = 0;
     private JFrame frame;
     private String playerName;
+    private javax.sound.sampled.Clip musicClip;
 
     public DrivingQuiz(JFrame frame, String playerName) {
 
@@ -209,6 +210,7 @@ public class DrivingQuiz {
         currentIndex = 0;
         score = 0;
 
+        playMusic();
         showQuestion();
     }
 
@@ -332,6 +334,33 @@ public class DrivingQuiz {
         frame.repaint();
     }
 
+    // ================= BACKGROUND MUSIC =================
+    private void playMusic() {
+        try {
+            java.net.URL url = getClass().getClassLoader().getResource("ConquestPkg/music/quiz_music.wav");
+            if (url == null) {
+                java.io.File f = new java.io.File("music/quiz_music.wav");
+                if (f.exists()) url = f.toURI().toURL();
+            }
+            if (url == null) { System.err.println("[Music] quiz_music.wav not found"); return; }
+            javax.sound.sampled.AudioInputStream ais = javax.sound.sampled.AudioSystem.getAudioInputStream(url);
+            musicClip = javax.sound.sampled.AudioSystem.getClip();
+            musicClip.open(ais);
+            javax.sound.sampled.FloatControl volume = (javax.sound.sampled.FloatControl)
+                    musicClip.getControl(javax.sound.sampled.FloatControl.Type.MASTER_GAIN);
+            volume.setValue(volume.getMinimum() + (volume.getMaximum() - volume.getMinimum()) * 0.65f);
+            musicClip.loop(javax.sound.sampled.Clip.LOOP_CONTINUOUSLY);
+            musicClip.start();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    private void stopMusic() {
+        if (musicClip != null && musicClip.isRunning()) {
+            musicClip.stop();
+            musicClip.close();
+        }
+    }
+
     // ================= CLICK SOUND =================
     private void playClick() {
         new Thread(() -> {
@@ -373,6 +402,7 @@ public class DrivingQuiz {
         if (currentIndex < quizQuestions.size()) {
             showQuestion();
         } else {
+            stopMusic();
             JOptionPane.showMessageDialog(frame, "Score: " + score + "/30");
         }
     }

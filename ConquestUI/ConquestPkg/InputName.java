@@ -37,6 +37,24 @@
             nameField.setHorizontalAlignment(JTextField.CENTER);
             nameField.setFont(new Font("Arial", Font.PLAIN, 30));
             proceedBtn.setFont(new Font("Arial", Font.BOLD, 25));
+            proceedBtn.setPreferredSize(new Dimension(220, 60));
+            proceedBtn.setBorder(BorderFactory.createCompoundBorder(
+                    new RoundedBorder(Color.GRAY, 2, 16),
+                    BorderFactory.createEmptyBorder(10, 20, 10, 20)
+            ));
+            proceedBtn.setContentAreaFilled(false);
+            proceedBtn.setOpaque(false);
+            proceedBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseEntered(java.awt.event.MouseEvent e) {
+                    proceedBtn.setBackground(new Color(173, 216, 230));
+                    proceedBtn.setContentAreaFilled(true);
+                }
+                @Override
+                public void mouseExited(java.awt.event.MouseEvent e) {
+                    proceedBtn.setContentAreaFilled(false);
+                }
+            });
         }
 
         // METHOD 3: Add Components (CENTERED)
