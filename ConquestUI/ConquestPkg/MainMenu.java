@@ -57,7 +57,7 @@ public class MainMenu {
         // ── Actions ───────────────────────────────────────────────
         playCard.onClick(() -> new QuizMenu(frame, playerName));
         scoreCard.onClick(() -> new QuizScores(frame, playerName));
-        exitCard.onClick(() -> System.exit(0));
+        exitCard.onClick(() -> showExitConfirm(frame));
 
         frame.revalidate();
         frame.repaint();
@@ -182,5 +182,82 @@ public class MainMenu {
 
             g2.dispose();
         }
+    }
+
+    private void showExitConfirm(JFrame frame) {
+        JDialog dialog = new JDialog(frame, true);
+        dialog.setUndecorated(true);
+        dialog.setSize(420, 200);
+        dialog.setLocationRelativeTo(frame);
+
+        JPanel panel = new JPanel(new BorderLayout()) {
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(245, 245, 245));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 24, 24);
+                g2.setColor(Color.DARK_GRAY);
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 24, 24);
+                g2.dispose();
+            }
+        };
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(28, 32, 24, 32));
+
+        JLabel msg = new JLabel("Are you sure you're going to leave?", JLabel.CENTER);
+        msg.setFont(new Font("Arial", Font.BOLD, 18));
+
+        JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        btnRow.setOpaque(false);
+
+        JButton yesBtn = makeDialogBtn("Yes");
+        JButton noBtn  = makeDialogBtn("No");
+
+        yesBtn.addActionListener(e -> System.exit(0));
+        noBtn.addActionListener(e  -> dialog.dispose());
+
+        btnRow.add(yesBtn);
+        btnRow.add(noBtn);
+
+        panel.add(msg,    BorderLayout.CENTER);
+        panel.add(btnRow, BorderLayout.SOUTH);
+
+        dialog.setContentPane(panel);
+        dialog.setBackground(new Color(0, 0, 0, 0));
+        dialog.setVisible(true);
+    }
+
+    private JButton makeDialogBtn(String text) {
+        JButton btn = new JButton(text) {
+            private boolean hovered = false;
+            {
+                addMouseListener(new MouseAdapter() {
+                    public void mouseEntered(MouseEvent e) { hovered = true;  repaint(); }
+                    public void mouseExited(MouseEvent e)  { hovered = false; repaint(); }
+                });
+            }
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                Color bg = hovered ? new Color(173, 216, 230) : UIManager.getColor("Panel.background");
+                if (bg == null) bg = new Color(238, 238, 238);
+                g2.setColor(bg);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                g2.setColor(Color.DARK_GRAY);
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(1, 1, getWidth()-2, getHeight()-2, 20, 20);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        btn.setFont(new Font("Arial", Font.BOLD, 16));
+        btn.setPreferredSize(new Dimension(120, 44));
+        btn.setContentAreaFilled(false);
+        btn.setOpaque(false);
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return btn;
     }
 }
