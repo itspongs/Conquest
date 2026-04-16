@@ -18,7 +18,6 @@
             frame.setVisible(true);
         }
 
-        // METHOD 1: Frame
         public void createFrame() {
             frame = new JFrame("Conquest");
             frame.setSize(1100, 700);
@@ -28,12 +27,10 @@
             frame.setResizable(false);
         }
 
-        // METHOD 2: Components
         public void createComponents() {
             nameField = new JTextField(25);
             proceedBtn = new JButton("Proceed");
 
-            // Placeholder behavior
             nameField.setText("Enter Player Name");
             nameField.setForeground(Color.GRAY);
             nameField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -53,13 +50,13 @@
                 }
             });
 
-            // Styling
             nameField.setHorizontalAlignment(JTextField.LEFT);
             nameField.setFont(new Font("Arial", Font.PLAIN, 26));
             nameField.setPreferredSize(new Dimension(480, 60));
             nameField.setBorder(BorderFactory.createCompoundBorder(
-                    new RoundedBorder(Color.GRAY, 2, 10),
-                    BorderFactory.createEmptyBorder(5, 12, 5, 12)
+                    
+                new RoundedBorder(Color.GRAY, 2, 10),
+                BorderFactory.createEmptyBorder(5, 12, 5, 12)
             ));
 
             proceedBtn.setFont(new Font("Arial", Font.BOLD, 22));
@@ -83,7 +80,6 @@
             });
         }
 
-        // METHOD 3: Add Components (CENTERED)
         public void addComponents() {
             JPanel group = new JPanel();
             group.setLayout(new BoxLayout(group, BoxLayout.Y_AXIS));
@@ -105,22 +101,19 @@
             frame.add(group, new GridBagConstraints());
         }
 
-        // METHOD 4: Actions
         public void addActions() {
             proceedBtn.addActionListener(e -> handleProceed());
         }
 
-        // METHOD 5: Logic
         public void handleProceed() {
             String playerName = nameField.getText().trim();
 
             if (playerName.isEmpty() || playerName.equals("Enter Player Name")) {
                 JOptionPane.showMessageDialog(frame, "Please enter your name!");
             } else {
-                // 🔥 DO NOT DISPOSE FRAME
+
                 frame.getContentPane().removeAll();
 
-                // Load Main Menu in SAME frame
                 new MainMenu(frame, playerName);
 
                 frame.revalidate();

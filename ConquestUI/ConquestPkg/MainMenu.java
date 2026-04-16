@@ -13,7 +13,6 @@ public class MainMenu {
         frame.getContentPane().removeAll();
         frame.setLayout(new BorderLayout());
 
-        // ── Fixed top header ──────────────────────────────────────
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
         header.setBorder(BorderFactory.createEmptyBorder(30, 0, 20, 0));
@@ -31,7 +30,7 @@ public class MainMenu {
         header.add(Box.createRigidArea(new Dimension(0, 4)));
         header.add(title);
 
-        // ── Buttons ───────────────────────────────────────────────
+        
         JPanel centerWrapper = new JPanel(new GridBagLayout());
         centerWrapper.setOpaque(false);
 
@@ -54,7 +53,6 @@ public class MainMenu {
         frame.add(header, BorderLayout.NORTH);
         frame.add(centerWrapper, BorderLayout.CENTER);
 
-        // ── Actions ───────────────────────────────────────────────
         playCard.onClick(() -> new QuizMenu(frame, playerName));
         scoreCard.onClick(() -> new QuizScores(frame, playerName));
         exitCard.onClick(() -> showExitConfirm(frame));
@@ -63,7 +61,6 @@ public class MainMenu {
         frame.repaint();
     }
 
-    // ── Hover card (JPanel, not JButton) ─────────────────────────
     static class HoverCard extends JPanel {
 
         private static final int W          = 260;
@@ -81,7 +78,7 @@ public class MainMenu {
 
         HoverCard(String label, String desc) {
             this.label = label;
-            setLayout(null);          // absolute positioning — no layout fights
+            setLayout(null);         
             setOpaque(false);
             setPreferredSize(new Dimension(W, H_CLOSED));
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -118,14 +115,14 @@ public class MainMenu {
 
             anim = new Timer(ANIM_MS, null);
             anim.addActionListener(e -> {
-                // height
+
+                //LORD TABANG KALIBOG
                 int hDiff = targetH - curH;
                 int hStep = hDiff / 4;
                 if (hStep == 0) hStep = Integer.signum(hDiff);
                 curH += hStep;
                 if (Math.abs(targetH - curH) <= 1) curH = targetH;
 
-                // alpha
                 float aDiff = targetA - alpha;
                 float aStep = aDiff / 5f;
                 if (Math.abs(aStep) < 0.015f) aStep = Math.signum(aDiff) * 0.015f;
@@ -135,7 +132,6 @@ public class MainMenu {
 
                 if (curH == targetH && alpha == targetA) anim.stop();
 
-                // reposition desc label inside the card
                 int descTop = H_CLOSED + 4;
                 int descH   = curH - descTop - 8;
                 descLabel.setBounds(8, descTop, W - 16, Math.max(0, descH));
@@ -155,10 +151,10 @@ public class MainMenu {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            // background
+            // HEEEEEEEEEEEEEEEEEEEEEE
             Color bg = (alpha > 0) ? new Color(173, 216, 230) : UIManager.getColor("Panel.background");
             if (bg == null) bg = new Color(238, 238, 238);
-            // blend toward hover color based on alpha
+          
             Color base = UIManager.getColor("Panel.background");
             if (base == null) base = new Color(238, 238, 238);
             int r = (int)(base.getRed()   + (173 - base.getRed())   * alpha);
@@ -167,12 +163,12 @@ public class MainMenu {
             g2.setColor(new Color(r, gv, b));
             g2.fillRoundRect(0, 0, getWidth(), curH, ARC, ARC);
 
-            // border
+    
             g2.setColor(Color.DARK_GRAY);
             g2.setStroke(new BasicStroke(2));
             g2.drawRoundRect(1, 1, getWidth() - 2, curH - 2, ARC, ARC);
 
-            // button label — always centered in the top H_CLOSED strip
+            // button label 
             g2.setFont(new Font("Arial", Font.BOLD, 28));
             g2.setColor(Color.BLACK);
             FontMetrics fm = g2.getFontMetrics();

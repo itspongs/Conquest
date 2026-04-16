@@ -15,23 +15,20 @@ public class QuizMenu {
         main.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
         main.setOpaque(false);
 
-        // ── TOP: Welcome ──────────────────────────────────────────
+     
         JLabel welcome = new JLabel("Welcome " + playerName, JLabel.CENTER);
         welcome.setFont(new Font("Arial", Font.BOLD, 22));
         main.add(welcome, BorderLayout.NORTH);
 
-        // ── CENTER ────────────────────────────────────────────────
         JPanel middle = new JPanel(new BorderLayout(40, 0));
         middle.setOpaque(false);
         middle.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 0));
 
-        // Left column
         HoverCategoryBtn geoBtn   = new HoverCategoryBtn("Geography");
         HoverCategoryBtn driveBtn = new HoverCategoryBtn("Driving");
         HoverCategoryBtn mediaBtn = new HoverCategoryBtn("Media");
         JPanel leftCol = makeColumn(geoBtn, driveBtn, mediaBtn);
 
-        // Center title
         JLabel title = new JLabel("ConQuest", JLabel.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 64));
 
@@ -51,7 +48,6 @@ public class QuizMenu {
         titleStack.add(chooseSub);
         titlePanel.add(titleStack);
 
-        // Right column
         HoverCategoryBtn genBtn   = new HoverCategoryBtn("General Knowledge");
         HoverCategoryBtn brainBtn = new HoverCategoryBtn("Brainrot");
         HoverCategoryBtn progBtn  = new HoverCategoryBtn("Programming");
@@ -62,7 +58,6 @@ public class QuizMenu {
         middle.add(rightCol,   BorderLayout.EAST);
         main.add(middle, BorderLayout.CENTER);
 
-        // ── BOTTOM: Back ──────────────────────────────────────────
         JButton backBtn = makeBackBtn("Back");
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
         bottom.setOpaque(false);
@@ -71,7 +66,12 @@ public class QuizMenu {
 
         frame.add(main, BorderLayout.CENTER);
 
-        // ── Actions ───────────────────────────────────────────────
+
+
+        //TO THE ASSIGNED TASKERS
+        //
+        //
+        //
         backBtn.addActionListener(e  -> new MainMenu(frame, playerName));
         driveBtn.addActionListener(e -> new DrivingQuiz(frame, playerName));
         geoBtn.addActionListener(e   -> JOptionPane.showMessageDialog(frame, "Geography — Coming Soon!"));
@@ -84,16 +84,16 @@ public class QuizMenu {
         frame.repaint();
     }
 
-    // Builds a vertically-centered column that gives each button room to expand downward
+
+
     private JPanel makeColumn(HoverCategoryBtn b1, HoverCategoryBtn b2, HoverCategoryBtn b3) {
-        // Use GridBagLayout so the column itself is vertically centered in the middle strip
+       
         JPanel outer = new JPanel(new GridBagLayout());
         outer.setOpaque(false);
 
-        // Inner panel uses BoxLayout but with overflow allowed via a plain panel wrapper
         JPanel inner = new JPanel() {
             @Override public Dimension getPreferredSize() {
-                // height = sum of current button heights + gaps
+              
                 int h = b1.curH + b2.curH + b3.curH + 16 * 2;
                 return new Dimension(HoverCategoryBtn.W, h);
             }
@@ -110,7 +110,6 @@ public class QuizMenu {
         inner.add(b2);
         inner.add(b3);
 
-        // When any button animates, tell the inner panel to re-layout
         Runnable relayout = () -> {
             inner.revalidate();
             inner.repaint();
@@ -154,7 +153,6 @@ public class QuizMenu {
         return btn;
     }
 
-    // ── Hover-expand category button ──────────────────────────────
     static class HoverCategoryBtn extends JPanel {
 
         static final int W        = 280;
@@ -227,7 +225,6 @@ public class QuizMenu {
 
                 if (curH == targetH && alpha == targetA) anim.stop();
 
-                // position desc label in the expanded area
                 descLabel.setBounds(4, H_CLOSED + 2, W - 8, Math.max(0, curH - H_CLOSED - 8));
 
                 repaint();

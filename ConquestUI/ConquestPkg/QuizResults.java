@@ -12,18 +12,15 @@ public class QuizResults {
 
     public QuizResults(JFrame frame, String playerName, int score, int total, String category) {
 
-        // Capture date/time at the moment results are shown
         LocalDateTime now = LocalDateTime.now();
         String date = now.format(DateTimeFormatter.ofPattern("MMMM d, yyyy"));
         String time = now.format(DateTimeFormatter.ofPattern("hh:mm a"));
 
-        // ── Loading screen first ──────────────────────────────────
         showLoadingScreen(frame, playerName, category, () ->
             showResults(frame, playerName, score, total, category, date, time)
         );
     }
 
-    // ================= LOADING SCREEN =================
     private void showLoadingScreen(JFrame frame, String playerName, String category, Runnable onDone) {
 
         frame.getContentPane().removeAll();
@@ -59,7 +56,6 @@ public class QuizResults {
         panel.add(waiting);
         panel.add(Box.createVerticalGlue());
 
-        // Wrap in a centering panel so the bordered box doesn't stretch
         JPanel wrapper = new JPanel(new GridBagLayout());
         panel.setPreferredSize(new Dimension(480, 340));
         wrapper.add(panel);
@@ -74,7 +70,6 @@ public class QuizResults {
         }).start();
     }
 
-    // ================= RESULTS SCREEN =================
     private void showResults(JFrame frame, String playerName, int score, int total,
                              String category, String date, String time) {
 
@@ -95,32 +90,26 @@ public class QuizResults {
         ));
         card.setPreferredSize(new Dimension(500, 380));
 
-        // RESULTS header
         JLabel header = new JLabel("RESULTS");
         header.setFont(new Font("Arial", Font.BOLD, 28));
         header.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Well Done, player_name
         JLabel wellDone = new JLabel("Well Done, " + playerName);
         wellDone.setFont(new Font("Arial", Font.BOLD, 16));
         wellDone.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // "Your Quiz score is"
         JLabel scoreLabel = new JLabel("Your Quiz score is");
         scoreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Big score number
         JLabel scoreNum = new JLabel(score + " / " + total);
         scoreNum.setFont(new Font("Arial", Font.BOLD, 52));
         scoreNum.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Category
         JLabel catLabel = new JLabel("Category: " + category);
         catLabel.setFont(new Font("Arial", Font.BOLD, 16));
         catLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Date & Time
         JLabel dateLabel = new JLabel("Date: " + date);
         dateLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         dateLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -129,7 +118,6 @@ public class QuizResults {
         timeLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         timeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Go back button
         JButton backBtn = new JButton("Go back to Main Menu");
         backBtn.setFont(new Font("Arial", Font.PLAIN, 15));
         backBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -173,7 +161,6 @@ public class QuizResults {
         frame.repaint();
     }
 
-    // ================= VICTORY SOUND =================
     private void playVictorySound() {
         try {
             java.net.URL url = getClass().getClassLoader().getResource("ConquestPkg/music/victory_sound.wav");
@@ -189,13 +176,12 @@ public class QuizResults {
 
             javax.sound.sampled.FloatControl volume = (javax.sound.sampled.FloatControl)
                     clip.getControl(javax.sound.sampled.FloatControl.Type.MASTER_GAIN);
-            volume.setValue(volume.getMinimum() + (volume.getMaximum() - volume.getMinimum()) * 0.65f);
+            volume.setValue(volume.getMinimum() + (volume.getMaximum() - volume.getMinimum()) * 0.75f);
 
-            clip.start(); // play once, no loop
+            clip.start(); 
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    // ================= SAVE SCORE =================
     private void saveScore(String playerName, String category, int score, int total, String date, String time) {
         String entry = "Player: " + playerName + "\n"
                      + "Category: " + category + "\n"

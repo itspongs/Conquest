@@ -9,7 +9,7 @@ public class MusicPlayer {
     private static Clip clip;
 
     public static void play(String filename) {
-        stop(); // stop any currently playing music first
+        stop(); 
         try {
             URL url = MusicPlayer.class.getClassLoader().getResource("ConquestPkg/music/" + filename);
             if (url == null) {
@@ -23,7 +23,7 @@ public class MusicPlayer {
             clip.open(ais);
 
             FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            volume.setValue(volume.getMinimum() + (volume.getMaximum() - volume.getMinimum()) * 0.65f);
+            volume.setValue(volume.getMinimum() + (volume.getMaximum() - volume.getMinimum()) * 0.75f);
 
             clip.loop(Clip.LOOP_CONTINUOUSLY);
             clip.start();

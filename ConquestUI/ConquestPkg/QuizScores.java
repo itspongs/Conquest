@@ -21,7 +21,6 @@ public class QuizScores {
         JPanel main = new JPanel(new BorderLayout());
         main.setBorder(BorderFactory.createEmptyBorder(30, 40, 20, 40));
 
-        // ── Title ─────────────────────────────────────────────────
         JLabel title = new JLabel("ConQuest", JLabel.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 40));
 
@@ -39,7 +38,6 @@ public class QuizScores {
 
         main.add(titlePanel, BorderLayout.NORTH);
 
-        // ── Table ─────────────────────────────────────────────────
         String[] columns = { "Number", "Player", "Category", "Score", "Date", "Time" };
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
@@ -47,7 +45,7 @@ public class QuizScores {
 
         List<String[]> entries = parseScores();
         if (entries.isEmpty()) {
-            // empty model — "No Results Yet" shown in the scroll pane
+
         } else {
             for (int i = 0; i < entries.size(); i++) {
                 String[] e = entries.get(i);
@@ -63,14 +61,12 @@ public class QuizScores {
         table.setFocusable(false);
         table.setRowSelectionAllowed(false);
 
-        // Center all columns
         DefaultTableCellRenderer center = new DefaultTableCellRenderer();
         center.setHorizontalAlignment(JLabel.CENTER);
         for (int i = 0; i < columns.length; i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(center);
         }
 
-        // Header style
         JTableHeader header = table.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 15));
         header.setReorderingAllowed(false);
@@ -81,7 +77,7 @@ public class QuizScores {
         scrollPane.setBorder(new RoundedBorder(Color.DARK_GRAY, 2, 20));
         scrollPane.setPreferredSize(new Dimension(0, 280));
 
-        // "No Results Yet" overlay when empty
+        //KUNG NO RESULTS PA
         if (entries.isEmpty()) {
             JLabel empty = new JLabel("No Results Yet", JLabel.CENTER);
             empty.setFont(new Font("Arial", Font.BOLD, 22));
@@ -91,7 +87,6 @@ public class QuizScores {
 
         main.add(scrollPane, BorderLayout.CENTER);
 
-        // ── Back button ───────────────────────────────────────────
         JButton backBtn = new JButton("Back");
         backBtn.setFont(new Font("Arial", Font.BOLD, 16));
         backBtn.setPreferredSize(new Dimension(160, 42));
@@ -123,7 +118,7 @@ public class QuizScores {
         frame.repaint();
     }
 
-    // ── Parse score.txt into list of [player, category, score, date, time] ──
+    
     private List<String[]> parseScores() {
         List<String[]> results = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("ConquestPkg/score.txt"))) {
@@ -141,7 +136,7 @@ public class QuizScores {
                 }
             }
         } catch (IOException e) {
-            // file doesn't exist yet — return empty list
+          
         }
         return results;
     }

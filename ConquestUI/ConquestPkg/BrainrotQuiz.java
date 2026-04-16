@@ -424,7 +424,7 @@ public class BrainrotQuiz {
             musicClip.open(ais);
             javax.sound.sampled.FloatControl volume = (javax.sound.sampled.FloatControl)
                     musicClip.getControl(javax.sound.sampled.FloatControl.Type.MASTER_GAIN);
-            volume.setValue(volume.getMinimum() + (volume.getMaximum() - volume.getMinimum()) * 0.65f);
+            volume.setValue(volume.getMinimum() + (volume.getMaximum() - volume.getMinimum()) * 0.75f);
             musicClip.loop(javax.sound.sampled.Clip.LOOP_CONTINUOUSLY);
             musicClip.start();
         } catch (Exception e) { e.printStackTrace(); }
