@@ -284,9 +284,10 @@ public class DrivingQuiz {
         JPanel answers = new JPanel(new GridLayout(2, 2, 35, 31));
         answers.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
 
+        JButton[] btnArray = new JButton[4];
+
         for (int i = 0; i < 4; i++) {
             char letter = (char) ('A' + i);
-
             String choiceHtml = "<html><div style='text-align:left; padding:2px;'>"
                     + "<b>" + letter + ".</b> " + q.choices[i]
                     + "</div></html>";
@@ -306,21 +307,26 @@ public class DrivingQuiz {
             btn.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseEntered(java.awt.event.MouseEvent e) {
-                    btn.setBackground(new Color(173, 216, 230));
-                    btn.setContentAreaFilled(true);
+                    if (!btn.getBackground().equals(Color.GREEN) && !btn.getBackground().equals(Color.RED)) {
+                        btn.setBackground(new Color(173, 216, 230));
+                        btn.setContentAreaFilled(true);
+                    }
                 }
                 @Override
                 public void mouseExited(java.awt.event.MouseEvent e) {
-                    btn.setContentAreaFilled(false);
+                    if (!btn.getBackground().equals(Color.GREEN) && !btn.getBackground().equals(Color.RED)) {
+                        btn.setContentAreaFilled(false);
+                    }
                 }
             });
 
-            int selected = i;
-            btn.addActionListener(e -> {
-                playClick();
-                handleAnswer(selected);
-            });
+            btnArray[i] = btn;
             answers.add(btn);
+        }
+
+        for (int i = 0; i < 4; i++) {
+            int selected = i;
+            btnArray[i].addActionListener(e -> handleAnswer(selected, btnArray, q));
         }
 
         JPanel bottomHalf = new JPanel(new BorderLayout());
@@ -363,48 +369,86 @@ public class DrivingQuiz {
 
     // ================= CLICK SOUND =================
     private void playClick() {
+        playSynthSound(800, 60, 40, 80);
+    }
+
+    private void playCorrect() {
+        // Two rising tones: 600Hz then 900Hz
         new Thread(() -> {
-            try {
-                float sampleRate = 44100;
-                int durationMs = 60;
-                int samples = (int) (sampleRate * durationMs / 1000);
-                byte[] buf = new byte[samples];
-                for (int i = 0; i < samples; i++) {
-                    double t = i / sampleRate;
-                    double envelope = Math.exp(-t * 40);
-                    buf[i] = (byte) (envelope * Math.sin(2 * Math.PI * 800 * t) * 80);
-                }
-                javax.sound.sampled.AudioFormat fmt =
-                        new javax.sound.sampled.AudioFormat(sampleRate, 8, 1, true, false);
-                javax.sound.sampled.DataLine.Info info =
-                        new javax.sound.sampled.DataLine.Info(javax.sound.sampled.SourceDataLine.class, fmt);
-                javax.sound.sampled.SourceDataLine line =
-                        (javax.sound.sampled.SourceDataLine) javax.sound.sampled.AudioSystem.getLine(info);
-                line.open(fmt);
-                line.start();
-                line.write(buf, 0, buf.length);
-                line.drain();
-                line.close();
-            } catch (Exception ignored) {}
+            playSynthSoundBlocking(600, 120, 15, 90);
+            playSynthSoundBlocking(900, 180, 10, 90);
         }).start();
     }
 
-    private void handleAnswer(int selected) {
+    private void playWrong() {
+        // Two falling tones: 400Hz then 200Hz
+        new Thread(() -> {
+            playSynthSoundBlocking(400, 150, 10, 90);
+            playSynthSoundBlocking(200, 200, 8, 90);
+        }).start();
+    }
+
+    private void playSynthSound(int freq, int durationMs, double decay, int amplitude) {
+        new Thread(() -> playSynthSoundBlocking(freq, durationMs, decay, amplitude)).start();
+    }
+
+    private void playSynthSoundBlocking(int freq, int durationMs, double decay, int amplitude) {
+        try {
+            float sampleRate = 44100;
+            int samples = (int) (sampleRate * durationMs / 1000);
+            byte[] buf = new byte[samples];
+            for (int i = 0; i < samples; i++) {
+                double t = i / sampleRate;
+                double envelope = Math.exp(-t * decay);
+                buf[i] = (byte) (envelope * Math.sin(2 * Math.PI * freq * t) * amplitude);
+            }
+            javax.sound.sampled.AudioFormat fmt =
+                    new javax.sound.sampled.AudioFormat(sampleRate, 8, 1, true, false);
+            javax.sound.sampled.DataLine.Info info =
+                    new javax.sound.sampled.DataLine.Info(javax.sound.sampled.SourceDataLine.class, fmt);
+            javax.sound.sampled.SourceDataLine line =
+                    (javax.sound.sampled.SourceDataLine) javax.sound.sampled.AudioSystem.getLine(info);
+            line.open(fmt);
+            line.start();
+            line.write(buf, 0, buf.length);
+            line.drain();
+            line.close();
+        } catch (Exception ignored) {}
+    }
+
+    private void handleAnswer(int selected, JButton[] buttons, Question q) {
+
+        // disable all buttons immediately
+        for (JButton b : buttons) b.setEnabled(false);
 
         char selectedLetter = (char) ('A' + selected);
+        int correctIndex = q.correct - 'A';
+        boolean isCorrect = selectedLetter == q.correct;
 
-        if (selectedLetter == quizQuestions.get(currentIndex).correct) {
+        if (isCorrect) {
             score++;
-        }
-
-        currentIndex++;
-
-        if (currentIndex < quizQuestions.size()) {
-            showQuestion();
+            playCorrect();
+            buttons[selected].setBackground(Color.GREEN);
+            buttons[selected].setContentAreaFilled(true);
         } else {
-            stopMusic();
-            JOptionPane.showMessageDialog(frame, "Score: " + score + "/30");
+            playWrong();
+            buttons[selected].setBackground(Color.RED);
+            buttons[selected].setContentAreaFilled(true);
+            buttons[correctIndex].setBackground(Color.GREEN);
+            buttons[correctIndex].setContentAreaFilled(true);
         }
+
+        // wait 1.2 seconds then move on
+        new javax.swing.Timer(1200, e -> {
+            ((javax.swing.Timer) e.getSource()).stop();
+            currentIndex++;
+            if (currentIndex < quizQuestions.size()) {
+                showQuestion();
+            } else {
+                stopMusic();
+                JOptionPane.showMessageDialog(frame, "Score: " + score + "/30");
+            }
+        }).start();
     }
 
     // ================= QUESTIONS =================
@@ -1065,36 +1109,4 @@ public class DrivingQuiz {
                 "ConquestPkg/images/Driving/50.png"
         ));
     }
-}
-
-// ================= ROUNDED BORDER HELPER =================
-class RoundedBorder implements javax.swing.border.Border {
-    private final int radius;
-    private final Color color;
-    private final int thickness;
-
-    RoundedBorder(Color color, int thickness, int radius) {
-        this.color = color;
-        this.thickness = thickness;
-        this.radius = radius;
-    }
-
-    @Override
-    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(color);
-        g2.setStroke(new BasicStroke(thickness));
-        g2.drawRoundRect(x + thickness / 2, y + thickness / 2,
-                width - thickness, height - thickness, radius, radius);
-        g2.dispose();
-    }
-
-    @Override
-    public Insets getBorderInsets(Component c) {
-        return new Insets(radius / 2, radius / 2, radius / 2, radius / 2);
-    }
-
-    @Override
-    public boolean isBorderOpaque() { return false; }
 }
