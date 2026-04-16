@@ -532,8 +532,8 @@ public class BrainrotQuiz {
     //TO THE ASSIGNED TASKER
     //PUT ALL THE QUESTION 1-50 TO THE 2D ARRAYS
     //FROM QUESTION 31-50. DOWNLOAD OR SCREENSHOT THE IMAGES FOR EACH QUESTION.
-    //FROM QUESTION 31-50. ALL THE PICTURES SHOULD BE COMPILED AT (images/'categoryName') MUST BE RENAMED USING NUMBERS (31.png)
-    //FROM QUESTION 31-50. FOLLOW THE FORMAT BELOW, location => "images/'categoryName"
+    //FROM QUESTION 31-50. ALL THE PICTURES SHOULD BE COMPILED AT (ConquestPkg/images/'categoryName') MUST BE RENAMED USING NUMBERS (31.png)
+    //FROM QUESTION 31-50. FOLLOW THE FORMAT BELOW, location => "ConquestPkg/images/'categoryName"
     //FOLLOW THE REFERENCE/GUIDE (DrivingQuiz.java)
 
     private void loadQuestions() {
@@ -827,70 +827,70 @@ public class BrainrotQuiz {
                 "The 6 7 kid",
                 "The yelling kid",
                 "The painter kid",
-                "B", "images/Brainrot/41.png" },
+                "B", "ConquestPkg/images/Brainrot/41.png" },
 
               { "Who is this Brainrot known as?", // Question
                 "Gangster Footera",
                 "Trippi Troppi",
                 "Tung Tung Sahur",
                 "Boneca Ambalabu",
-                "C", "images/Brainrot/42.png" },
+                "C", "ConquestPkg/images/Brainrot/42.png" },
 
               { "What does this hand gesture mean?", // Question
                 "Help me",
                 "Are you choking? In sign language",
                 "I’m hungry",
                 "6 7",
-                "D", "images/Brainrot/43.png" },
+                "D", "ConquestPkg/images/Brainrot/43.png" },
 
               { "What is wrong with this brainrot?", // Question
                 "Plane with teeth",
                 "Missing missile dangling under the plane",
                 "Fire effects removed",
                 "Flying duck",
-                "B", "images/Brainrot/44.png" },
+                "B", "ConquestPkg/images/Brainrot/44.png" },
 
               { "What does this guy say?", // Question
                 "“I just hit the jackpot!”",
                 "“Did you know?”",
                 "“Fun fact!”",
                 "“I got a high score!”",
-                "A", "images/Brainrot/45.png" },
+                "A", "ConquestPkg/images/Brainrot/45.png" },
 
               { "What is the context of this brainrot?", // Question
                 "The 6 7 kid vs “Adrian explain our friend group”",
                 "Avengers",
                 "The 6 7 kid with “Adrian explain our friend group”",
                 "The meme gang",
-                "A", "images/Brainrot/46.png" },
+                "A", "ConquestPkg/images/Brainrot/46.png" },
 
               { "After saying “Adrian, explain our friendgroup”, What did they say?", // Question
                 "We use the power of friendship",
                 "You should leave us alone",
                 "We hate pedophiles!",
                 "We are Ohio",
-                "D", "images/Brainrot/47.png" },
+                "D", "ConquestPkg/images/Brainrot/47.png" },
 
               { "What is the main purpose of this Brainrot?", // Question
                 "To educate about science",
                 "To show realistic photography",
                 "To entertain using absurd humor and randomness",
                 "To advertise a product",
-                "C", "images/Brainrot/48.png" },
+                "C", "ConquestPkg/images/Brainrot/48.png" },
 
               { "Why might someone who is not online be confused by this Brainrot?", // Question
                 "It uses too many colors",
                 "It requires internet culture context to understand",
                 "It is too realistic",
                 "It is too old",
-                "B", "images/Brainrot/49.png" },
+                "B", "ConquestPkg/images/Brainrot/49.png" },
 
               { "What best describes the Brainrot?", // Question
                 "Structured educational diagram",
                 "Random or surreal internet meme (Brainrot content)",
                 "Professional photography",
                 "News report screenshot",
-                "B", "images/Brainrot/50.png" },
+                "B", "ConquestPkg/images/Brainrot/50.png" },
         };
 
 

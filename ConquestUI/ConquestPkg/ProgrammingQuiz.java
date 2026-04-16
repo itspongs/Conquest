@@ -534,8 +534,8 @@ public class ProgrammingQuiz {
     //TO THE ASSIGNED TASKER
     //PUT ALL THE QUESTION 1-50 TO THE 2D ARRAYS
     //FROM QUESTION 31-50. DOWNLOAD OR SCREENSHOT THE IMAGES FOR EACH QUESTION.
-    //FROM QUESTION 31-50. ALL THE PICTURES SHOULD BE COMPILED AT (images/'categoryName') MUST BE RENAMED USING NUMBERS (31.png)
-    //FROM QUESTION 31-50. FOLLOW THE FORMAT BELOW, location => "images/'categoryName"
+    //FROM QUESTION 31-50. ALL THE PICTURES SHOULD BE COMPILED AT (ConquestPkg/images/'categoryName') MUST BE RENAMED USING NUMBERS (31.png)
+    //FROM QUESTION 31-50. FOLLOW THE FORMAT BELOW, location => "ConquestPkg/images/'categoryName"
     //FOLLOW THE REFERENCE/GUIDE (DrivingQuiz.java)
 
     private void loadQuestions() {
@@ -565,14 +565,14 @@ public class ProgrammingQuiz {
               "", // Choice B
               "", // Choice C
               "", // Choice D
-              "", "images/Programming/41.png" }, //Correct Letter //number.png
+              "", "ConquestPkg/images/Programming/41.png" }, //Correct Letter //number.png
 
             { "", // Question
               "", // Choice A
               "", // Choice B
               "", // Choice C
               "", // Choice D
-                "", "images/Programming/  " }, //Correct Letter //number.png
+                "", "ConquestPkg/images/Programming/  " }, //Correct Letter //number.png
         };
 
 
