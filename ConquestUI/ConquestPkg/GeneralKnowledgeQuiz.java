@@ -64,14 +64,14 @@ public class GeneralKnowledgeQuiz {
         catLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 
-        //TO THE ASSIGNED TASKER
-        //WRITE YOUR FUN FACT ABOUT YOUR QUIZ OVER HERE!!!!!
-        //REPLACE THE TEXT DEPENDS THE SIZE OF YOUR SENTENCE
+        //Fun Fact added by: Frances C. Vega
+        //"General knowledge strengthens memory, critical thinking, and helps you make better
+        //connections across different fields of learning!"
 
         JLabel funFactText = new JLabel(
-            "<html><br>The term \\\"Brainrot\\\" refers to the mental state caused by consuming excessive amounts of low-quality internet content!<br>"
-            + "100% Accurate from the LTO Theoretical<br>"
-            + "Examination as of July 2025.</html>"
+            "<html><br>Fun fact: General knowledge strengthens memory,<br>"
+            + "critical thinking, and helps you make better<br>"
+            + "connections across different fields of learning!</html>"
         );
 
         
