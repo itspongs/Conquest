@@ -129,7 +129,7 @@ public class QuizMenu {
         brainBtn.addActionListener(e -> new BrainrotQuiz(frame, playerName));
         geoBtn.addActionListener(e   -> JOptionPane.showMessageDialog(frame, "Geography — Coming Soon!"));
         mediaBtn.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Media — Coming Soon!"));
-        genBtn.addActionListener(e   -> JOptionPane.showMessageDialog(frame, "General Knowledge — Coming Soon!"));
+        genBtn.addActionListener(e   -> new GeneralKnowledgeQuiz(frame, playerName));
         progBtn.addActionListener(e  -> JOptionPane.showMessageDialog(frame, "Programming — Coming Soon!"));
 
         frame.revalidate();
