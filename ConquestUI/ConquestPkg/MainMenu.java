@@ -106,7 +106,7 @@ public class MainMenu {
             "Group 5:<br>" +
             "Joseph James Pungyan<br>" +
             "Zeus Angelo Gavira<br>" +
-            "Chinggay Vega<br>" +
+            "Frances Vega<br>" +
             "Francis Lawrence De Jesus" +
             "</div></html>",
             JLabel.RIGHT
