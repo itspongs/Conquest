@@ -531,46 +531,367 @@ public class GeneralKnowledgeQuiz {
 
 
 
-    //TO THE ASSIGNED TASKER
-    //PUT ALL THE QUESTION 1-50 TO THE 2D ARRAYS
-    //FROM QUESTION 31-50. DOWNLOAD OR SCREENSHOT THE IMAGES FOR EACH QUESTION.
-    //FROM QUESTION 31-50. ALL THE PICTURES SHOULD BE COMPILED AT (ConquestPkg/images/'categoryName') MUST BE RENAMED USING NUMBERS (31.png)
-    //FROM QUESTION 31-50. FOLLOW THE FORMAT BELOW, location => "ConquestPkg/images/'categoryName"
-    //FOLLOW THE REFERENCE/GUIDE (DrivingQuiz.java)
+    //ASSIGNED TASKER: FRANCES C. VEGA
+    //ALL THE QUESTION 1-50 TO THE 2D ARRAYS ALREADY INPUTTED
+    //FROM QUESTION 31-50. THE IMAGES ALREADY DOWNLOADED/SCREENSHOT FOR EACH QUESTION.
+    //FROM QUESTION 31-50. ALL THE PICTURES ALREADY COMPILED AND RENAMED ACCORDINGLY AT (ConquestPkg/images/GeneralKnowledge)
+    //FROM QUESTION 31-50. THE FORMAT BELOW ALREADY FOLLOWED, location => "ConquestPkg/images/GeneralKnowledge"
+    //THE REFERENCE/GUIDE WAS FOLLOWED (DrivingQuiz.java)
 
     private void loadQuestions() {
 
         // 2D array: { question, choiceA, choiceB, choiceC, choiceD, correct, image (or "") }
         String[][] data = {
-            // Q1 TO Q30
-            { "", // Question
-              "", // Choice A
-              "", // Choice B
-              "", // Choice C
-              "", // Choice D
-              "", "" }, // Correct Letter   // LEAVE BLANK FOR image
-
-              { "", // Question
-              "", // Choice A
-              "", // Choice B
-              "", // Choice C
-              "", // Choice D
-              "", "" }, // Correct Letter   // LEAVE BLANK FOR image
-
-            // Q31 - 50
-            { "", // Question
-              "", // Choice A
-              "", // Choice B
-              "", // Choice C
-              "", // Choice D
-              "", "ConquestPkg/images/GeneralKnowledge/31.png" }, //Correct Letter //number.png
-
-            { "", // Question
-              "", // Choice A
-              "", // Choice B
-              "", // Choice C
-              "", // Choice D
-                "", "ConquestPkg/images/GeneralKnowledge/  " }, //Correct Letter //number.png
+            // Q1 
+            { "Which planet is closest to the Sun?", // Question
+              "Venus", // Choice A
+              "Mercury", // Choice B
+              "Earth", // Choice C
+              "Mars", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image
+            // Q2
+              { "Who painted the Mona Lisa?", // Question
+              "Van Gogh", // Choice A
+              "Picasso", // Choice B
+              "Da Vinci", // Choice C
+              "Monet", // Choice D
+              "C", "" }, // Correct Letter   // LEAVE BLANK FOR image
+            // Q3
+              { "Which element has the symbol O?", // Question
+              "Gold", // Choice A
+              "Oxygen", // Choice B
+              "Osmium", // Choice C
+              "Zinc", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image
+            // Q4
+              { "Which galaxy do we live in?", // Question
+              "Andromeda", // Choice A
+              "Milky Way", // Choice B
+              "Sombrero", // Choice C
+              "Whirlpool", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image  
+            // Q5
+              { "What is the largest planet in the solar system?", // Question
+              "Saturn", // Choice A
+              "Jupiter", // Choice B
+              "Neptune", // Choice C
+              "Uranus", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image   
+            // Q6
+              { "What force keeps planets in orbit?", // Question
+              "Magnetism", // Choice A
+              "Gravity", // Choice B
+              "Friction", // Choice C
+              "Energy", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image   
+            // Q7
+              { "What is the Earth's natural satellite?", // Question
+              "Titan", // Choice A
+              "Europa", // Choice B
+              "Moon", // Choice C
+              "Phobos", // Choice D
+              "C", "" }, // Correct Letter   // LEAVE BLANK FOR image    
+            // Q8
+              { "Which gas do plants use for photosynthesis?", // Question
+              "Oxygen", // Choice A
+              "Carbon Dioxide", // Choice B
+              "Nitrogen", // Choice C
+              "Hydrogen", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image   
+            // Q9
+              { "What is the chemical formula of water", // Question
+              "CO2", // Choice A
+              "H2O", // Choice B
+              "O2", // Choice C
+              "NaCl", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image   
+             // Q10
+              { "What part of the cell contains DNA?", // Question
+              "Cytoplasm", // Choice A
+              "Nucleus", // Choice B
+              "Membrane", // Choice C
+              "Ribosome", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image    
+            // Q11
+              { "Who developed the theory of relativity?", // Question
+              "Newton", // Choice A
+              "Einstein", // Choice B
+              "Tesla", // Choice C
+              "Darwin", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image     
+            // Q12
+              { "What is the speed of light?", // Question
+              "300,000 km/s", // Choice A
+              "150,000 km/s", // Choice B
+              "1,000 km/s", // Choice C
+              "30,000 km/s", // Choice D
+              "A", "" }, // Correct Letter   // LEAVE BLANK FOR image    
+            // Q13
+              { "Which organ pumps blood?", // Question
+              "Lungs", // Choice A
+              "Brain", // Choice B
+              "Heart", // Choice C
+              "Kidney", // Choice D
+              "C", "" }, // Correct Letter   // LEAVE BLANK FOR image   
+            // Q14
+              { "What is the rarest blood type in humans", // Question
+              "AB negative", // Choice A
+              "AB positive", // Choice B
+              "A positive", // Choice C
+              "B positive", // Choice D
+              "A", "" }, // Correct Letter   // LEAVE BLANK FOR image 
+            // Q15
+              { "Which gas do humans breathe in?", // Question
+              "Carbon dioxide", // Choice A
+              "Oxygen", // Choice B
+              "Nitrogen", // Choice C
+              "Hydrogen", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image 
+            // Q16
+              { "Which scientist discovered gravity?", // Question
+              "Einstein", // Choice A
+              "Newton", // Choice B
+              "Galileo", // Choice C
+              "Curie", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image     
+            // Q17
+              { "What is the boiling point of water?", // Question
+              "50 degree Celsius", // Choice A
+              "100 degree Celsius", // Choice B
+              "150 degree Celsius", // Choice C
+              "200 degree Celsius", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image     
+            // Q18
+              { "Which vitamin comes from sunlight?", // Question
+              "Vitamin A", // Choice A
+              "Vitamin B", // Choice B
+              "Vitamin C", // Choice C
+              "Vitamin D", // Choice D
+              "D", "" }, // Correct Letter   // LEAVE BLANK FOR image    
+            // Q19
+              { "Which blood cells fight infection", // Question
+              "Red", // Choice A
+              "White", // Choice B
+              "Platelets", // Choice C
+              "Plasma", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image    
+             // Q20
+              { "What is the largest organ in the human body?", // Question
+              "Heart", // Choice A
+              "Liver", // Choice B
+              "Skin", // Choice C
+              "Brain", // Choice D
+              "C", "" }, // Correct Letter   // LEAVE BLANK FOR image  
+             // Q21
+              { "Who wrote 'Romeo and Juliet'?", // Question
+              "Dickens", // Choice A
+              "Shakespeare", // Choice B
+              "Hemingway", // Choice C
+              "Orwell", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image    
+            // Q22
+              { "What is the longest-running TV show (animated)?", // Question
+              "Simpsons", // Choice A
+              "Family Guy", // Choice B
+              "South Park", // Choice C
+              "SpongeBob", // Choice D
+              "A", "" }, // Correct Letter   // LEAVE BLANK FOR image      
+            // Q23
+              { "Which instrument has 88 keys?", // Question
+              "Guitar", // Choice A
+              "Violin", // Choice B
+              "Piano", // Choice C
+              "Drums", // Choice D
+              "C", "" }, // Correct Letter   // LEAVE BLANK FOR image      
+            // Q24
+              { "Who was the first man on the moon?", // Question
+              "Buzz Aldrin", // Choice A
+              "Yuri Gagarin", // Choice B
+              "Neil Armstrong", // Choice C
+              "John Glenn", // Choice D
+              "C", "" }, // Correct Letter   // LEAVE BLANK FOR image    
+            // Q25
+              { "What year did World War II end?", // Question
+              "1942", // Choice A
+              "1945", // Choice B
+              "1939", // Choice C
+              "1950", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image              
+            // Q26
+              { "Who invented the telephone?", // Question
+              "Edison", // Choice A
+              "Bell", // Choice B
+              "Tesla", // Choice C
+              "Newton", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image      
+            // Q27
+              { "Which language has the most native speakers?", // Question
+              "English", // Choice A
+              "Spanish", // Choice B
+              "Mandarin", // Choice C
+              "Hindi", // Choice D
+              "C", "" }, // Correct Letter   // LEAVE BLANK FOR image   
+            // Q28
+              { "What is the largest mammal?", // Question
+              "Elephant", // Choice A
+              "Blue whale", // Choice B
+              "Giraffe", // Choice C
+              "Hippo", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image     
+            // Q29
+              { "Which animal is known for changing colors?", // Question
+              "Dog", // Choice A
+              "Chameleon", // Choice B
+              "Lion", // Choice C
+              "Elephant", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image     
+             // Q30
+              { "What is the fastest land animal?", // Question
+              "Lion", // Choice A
+              "Cheetah", // Choice B
+              "Horse", // Choice C
+              "Tiger", // Choice D
+              "B", "" }, // Correct Letter   // LEAVE BLANK FOR image     
+            // Q31
+            { "Which company created the iPhone?", // Question
+              "Microsoft", // Choice A
+              "Apple", // Choice B
+              "Google", // Choice C
+              "Samsung", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/31.png" }, //Correct Letter //number.png
+            // Q32
+            { "What does CPU stand for?", // Question
+              "Central Process Unit", // Choice A
+              "Central Processing Unit", // Choice B
+              "Computer Power Unit", // Choice C
+              "Core Processing Unit", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/32.png" }, //Correct Letter //number.png
+            // Q33
+            { "What is the main function of RAM?", // Question
+              "Storage", // Choice A
+              "Processing", // Choice B
+              "Temporary memory", // Choice C
+              "Graphics", // Choice D
+              "C", "ConquestPkg/images/GeneralKnowledge/33.png" }, //Correct Letter //number.png
+            // Q34
+            { "Which programming language is known for Android apps?", // Question
+              "Python", // Choice A
+              "Java", // Choice B
+              "C++", // Choice C
+              "Swift", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/34.png" }, //Correct Letter //number.png
+             // Q35
+            { "What does HTTP stand for?", // Question
+              "HyperText Transfer Protocol", // Choice A
+              "High Transfer Text Process", // Choice B
+              "Hyper Tool Protocol", // Choice C
+              "Host Transfer Program", // Choice D
+              "A", "ConquestPkg/images/GeneralKnowledge/35.png" }, //Correct Letter //number.png
+            // Q36
+            { "Which company developed Windows OS", // Question
+              "Apple", // Choice A
+              "Microsoft", // Choice B
+              "Google", // Choice C
+              "IBM", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/36.png" }, //Correct Letter //number.png
+            // Q37
+            { "Which device is used to input text?", // Question
+              "Monitor", // Choice A
+              "Keyboard", // Choice B
+              "Printer", // Choice C
+              "Speaker", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/37.png" }, //Correct Letter //number.png
+            // Q38
+            { "What does AI stand for?", // Question
+              "Automated Input", // Choice A
+              "Artificial Intelligence", // Choice B
+              "Advanced Internet", // Choice C
+              "Auto Interface", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/38.png" }, //Correct Letter //number.png
+            // Q39
+            { "Which storage is fastest?", // Question
+              "HDD", // Choice A
+              "SSD", // Choice B
+              "USB", // Choice C
+              "CD", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/39.png" }, //Correct Letter //number.png
+            // Q40
+            { "What is the hardest natural substance?", // Question
+              "Gold", // Choice A
+              "Iron", // Choice B
+              "Diamond", // Choice C
+              "Silver", // Choice D
+              "C", "ConquestPkg/images/GeneralKnowledge/40.png" }, //Correct Letter //number.png
+            // Q41
+            { "What is the red planet?", // Question
+              "Venus", // Choice A
+              "Mars", // Choice B
+              "Jupiter", // Choice C
+              "Saturn", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/41.png" }, //Correct Letter //number.png
+            // Q42
+            { "What is the closest star to Earth?", // Question
+              "Sirius", // Choice A
+              "Alpha Centauri", // Choice B
+              "Proxima Centauri", // Choice C
+              "Sun", // Choice D
+              "D", "ConquestPkg/images/GeneralKnowledge/42.png" }, //Correct Letter //number.png
+            // Q43
+            { "Which planet has rings?", // Question
+              "Earth", // Choice A
+              "Mars", // Choice B
+              "Saturn", // Choice C
+              "Venus", // Choice D
+              "C", "ConquestPkg/images/GeneralKnowledge/43.png" }, //Correct Letter //number.png
+            // Q44
+            { "What is a supernova?", // Question
+              "A planet", // Choice A
+              "Exploding star", // Choice B
+              "Galaxy", // Choice C
+              "Asteroid", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/44.png" }, //Correct Letter //number.png 
+            // Q45
+            { "What do black holes do?", // Question
+              "Emit light", // Choice A
+              "Absorb everything", // Choice B
+              "Reflect light", // Choice C
+              "Freeze time", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/45.png" }, //Correct Letter //number.png
+            // Q46
+            { "What is the Sun made mostly of?", // Question
+              "Oxygen", // Choice A
+              "Hydrogen", // Choice B
+              "Carbon", // Choice C
+              "Iron", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/46.png" }, //Correct Letter //number.png
+            // Q47
+            { "What is zero gravity called?", // Question
+              "No force", // Choice A
+              "Microgravity", // Choice B
+              "Hypergravity", // Choice C
+              "Antigravity", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/47.png" }, //Correct Letter //number.png
+            // Q48
+            { "What tool is used to observe stars?", // Question
+              "Microscope", // Choice A
+              "Telescope", // Choice B
+              "Periscope", // Choice C
+              "Binoculars", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/48.png" }, //Correct Letter //number.png
+            // Q49
+            { "What causes day and night?", // Question
+              "Moon rotation", // Choice A
+              "Earth rotation", // Choice B
+              "Sun movement", // Choice C
+              "Stars", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/49.png" }, //Correct Letter //number.png
+            // Q50
+            { "What is the Milky Way?", // Question
+              "Planet", // Choice A
+              "Galaxy", // Choice B
+              "Star", // Choice C
+              "Comet", // Choice D
+              "B", "ConquestPkg/images/GeneralKnowledge/50.png" }, //Correct Letter //number.png
         };
 
 
