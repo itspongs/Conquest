@@ -69,9 +69,9 @@ public class MediaQuiz {
         //REPLACE THE TEXT DEPENDS THE SIZE OF YOUR SENTENCE
 
         JLabel funFactText = new JLabel(
-            "<html><br>Fun Fact: 28% of these questions are<br>"
-            + "100% Accurate from the LTO Theoretical<br>"
-            + "Examination as of July 2025.</html>"
+            "<html><br>Fun Fact: Media includes audio, video,<br>"
+            + "images, and online content that people use<br>"
+            + "every day for communication and entertainment.</html>"
         );
 
         
@@ -542,35 +542,357 @@ public class MediaQuiz {
 
         // 2D array: { question, choiceA, choiceB, choiceC, choiceD, correct, image (or "") }
         String[][] data = {
-            // Q1 TO Q30
-            { "", // Question
-              "", // Choice A
-              "", // Choice B
-              "", // Choice C
-              "", // Choice D
-              "", "" }, // Correct Letter   // LEAVE BLANK FOR image
 
-              { "", // Question
-              "", // Choice A
-              "", // Choice B
-              "", // Choice C
-              "", // Choice D
-              "", "" }, // Correct Letter   // LEAVE BLANK FOR image
-
-            // Q31 - 50
-            { "", // Question
-              "", // Choice A
-              "", // Choice B
-              "", // Choice C
-              "", // Choice D
-              "", "ConquestPkg/images/Media/31.png" }, //Correct Letter //number.png
-
-            { "", // Question
-              "", // Choice A
-              "", // Choice B
-              "", // Choice C
-              "", // Choice D
-              "", "ConquestPkg/images/Media/  " }, //Correct Letter //number.png
+            // Q1
+            { "What is media?",
+                "Hardware",
+                "Communication tools",
+                "Software only",
+                "Internet only",
+                "B", "" },
+            // Q2
+            { "Which is an example of media?",
+                "Chair",
+                "TV",
+                "Table",
+                "Pen",
+                "B", "" },
+            // Q3
+            { "What is digital media?",
+                "Printed books",
+                "Online content",
+                "Radio only",
+                "Paper",
+                "B", "" },
+            // Q4
+            { "Which is social media?",
+                "Microsoft Word",
+                "Facebook",
+                "Notepad",
+                "Excel",
+                "B", "" },
+            // Q5
+            { "What is multimedia?",
+                "One media type",
+                "Combination of media",
+                "Only video",
+                "Only audio",
+                "B", "" },
+            // Q6
+            { "Which is an audio format?",
+                "MP3",
+                "JPG",
+                "PNG",
+                "MP4",
+                "A", "" },
+            // Q7
+            { "Which is an image format?",
+                "MP3",
+                "JPG",
+                "MP4",
+                "DOCX",
+                "B", "" },
+            // Q8
+            { "Which is a video format?",
+                "JPG",
+                "MP4",
+                "TXT",
+                "PDF",
+                "B", "" },
+            // Q9
+            { "What is streaming?",
+                "Downloading",
+                "Watching online without saving",
+                "Editing",
+                "Recording",
+                "B", "" },
+            // Q10
+            { "What is resolution?",
+                "Sound",
+                "Image clarity",
+                "File size",
+                "Speed",
+                "B", "" },
+            // Q11
+            { "What is editing?",
+                "Recording",
+                "Improving content",
+                "Deleting",
+                "Uploading",
+                "B", "" },
+            // Q12
+            { "Which app is for video editing?",
+                "Chrome",
+                "CapCut",
+                "Excel",
+                "Notepad",
+                "B", "" },
+            // Q13
+            { "What is content creation?",
+                "Watching videos",
+                "Making media content",
+                "Downloading",
+                "Sharing only",
+                "B", "" },
+            // Q14
+            { "Which is a media device?",
+                "Hammer",
+                "Computer",
+                "Chair",
+                "Spoon",
+                "B", "" },
+            // Q15
+            { "What is copyright?",
+                "Free content",
+                "Ownership of work",
+                "Editing",
+                "Sharing",
+                "B", "" },
+            // Q16
+            { "What is a file format?",
+                "Storage type",
+                "File structure/type",
+                "Folder",
+                "App",
+                "B", "" },
+            // Q17
+            { "Which is NOT media?",
+                "Audio",
+                "Video",
+                "Text",
+                "Tree",
+                "D", "" },
+            // Q18
+            { "What is audio?",
+                "Sound",
+                "Image",
+                "Video",
+                "Text",
+                "A", "" },
+            // Q19
+            { "What is video?",
+                "Sound",
+                "Moving images",
+                "Text",
+                "Code",
+                "B", "" },
+            // Q20
+            { "What is image?",
+                "Sound",
+                "Visual picture",
+                "Code",
+                "Video",
+                "B", "" },
+            // Q21
+            { "What is internet media?",
+                "Offline files",
+                "Online content",
+                "Books",
+                "Paper",
+                "B", "" },
+            // Q22
+            { "Which platform is for videos?",
+                "YouTube",
+                "Excel",
+                "Word",
+                "Notepad",
+                "A", "" },
+            // Q23
+            { "What is sharing?",
+                "Keeping files",
+                "Sending content to others",
+                "Deleting",
+                "Editing",
+                "B", "" },
+            // Q24
+            { "What is download?",
+                "Upload",
+                "Save from internet",
+                "Delete",
+                "Share",
+                "B", "" },
+            // Q25
+            { "What is upload?",
+                "Download",
+                "Send to internet",
+                "Delete",
+                "Copy",
+                "B", "" },
+            // Q26
+            { "What is file size?",
+                "Length",
+                "Storage amount",
+                "Width",
+                "Height",
+                "B", "" },
+            // Q27
+            { "What is bitrate?",
+                "Speed of data",
+                "Size",
+                "Length",
+                "Color",
+                "A", "" },
+            // Q28
+            { "What is animation?",
+                "Still image",
+                "Moving graphics",
+                "Sound",
+                "Text",
+                "B", "" },
+            // Q29
+            { "What is graphic design?",
+                "Coding",
+                "Visual creation",
+                "Audio editing",
+                "Networking",
+                "B", "" },
+            // Q30
+            { "What is UI?",
+                "User Interface",
+                "Universal Input",
+                "User Internet",
+                "Unique Interface",
+                "A", "" },
+            // Q31
+            { "What is this?",
+                "App",
+                "Social media",
+                "Game",
+                "Tool",
+                "B", "ConquestPkg/images/Media/31.png" },
+            // Q32
+            { "What platform is this?",
+                "Video platform",
+                "Text editor",
+                "Browser",
+                "OS",
+                "A", "ConquestPkg/images/Media/32.png" },
+            // Q33
+            { "What type is this?",
+                "Image",
+                "Audio",
+                "Video",
+                "Text",
+                "B", "ConquestPkg/images/Media/33.png" },
+            // Q34
+            { "What type is this?",
+                "Audio",
+                "Image",
+                "Video",
+                "Code",
+                "B", "ConquestPkg/images/Media/34.png" },
+            // Q35
+            { "What type is this?",
+                "Audio",
+                "Video",
+                "Image",
+                "Text",
+                "B", "ConquestPkg/images/Media/35.png" },
+            // Q36
+            { "What is this?",
+                "Editor",
+                "Player",
+                "Browser",
+                "File",
+                "B", "ConquestPkg/images/Media/36.png" },
+            // Q37
+            { "What is this used for?",
+                "Coding",
+                "Video editing",
+                "Browsing",
+                "Typing",
+                "B", "ConquestPkg/images/Media/37.png" },
+            // Q38
+            { "What is this used for?",
+                "Audio recording",
+                "Video",
+                "Editing",
+                "Coding",
+                "A", "ConquestPkg/images/Media/38.png" },
+            // Q39
+            { "What is this used for?",
+                "Audio",
+                "Capturing images/videos",
+                "Editing",
+                "Coding",
+                "B", "ConquestPkg/images/Media/39.png" },
+            // Q40
+            { "What does it show?",
+                "Sound",
+                "Image quality",
+                "Speed",
+                "Size",
+                "B", "ConquestPkg/images/Media/40.png" },
+            // Q41
+            { "What is happening?",
+                "Download",
+                "Streaming",
+                "Editing",
+                "Deleting",
+                "B", "ConquestPkg/images/Media/41.png" },
+            // Q42
+            { "What does it mean?",
+                "Download",
+                "Upload",
+                "Delete",
+                "Share",
+                "B", "ConquestPkg/images/Media/42.png" },
+            // Q43
+            { "What does it mean?",
+                "Upload",
+                "Download",
+                "Edit",
+                "Delete",
+                "B", "ConquestPkg/images/Media/43.png" },
+            // Q44
+            { "What is this?",
+                "Storage",
+                "Editor",
+                "Player",
+                "Device",
+                "A", "ConquestPkg/images/Media/44.png" },
+            // Q45
+            { "What is this?",
+                "Video",
+                "Audio",
+                "Image",
+                "Text",
+                "B", "ConquestPkg/images/Media/45.png" },
+            // Q46
+            { "What is this?",
+                "Image only",
+                "Animated image",
+                "Video only",
+                "Audio",
+                "B", "ConquestPkg/images/Media/46.png" },
+            // Q47
+            { "What is this?",
+                "User Interface",
+                "Code",
+                "Audio",
+                "Video",
+                "A", "ConquestPkg/images/Media/47.png" },
+            // Q48
+            { "What is this used for?",
+                "Editing video",
+                "Coding",
+                "Playing",
+                "Sharing",
+                "A", "ConquestPkg/images/Media/48.png" },
+            // Q49
+            { "What does it mean?",
+                "Free",
+                "Ownership",
+                "Delete",
+                "Share",
+                "B", "ConquestPkg/images/Media/49.png" },
+            // Q50
+            { "What is this?",
+                "Offline content",
+                "Social media content",
+                "Code",
+                "File",
+                "B", "ConquestPkg/images/Media/50.png" },
         };
 
 

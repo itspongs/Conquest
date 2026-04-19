@@ -69,9 +69,9 @@ public class ProgrammingQuiz {
         //REPLACE THE TEXT DEPENDS THE SIZE OF YOUR SENTENCE
 
         JLabel funFactText = new JLabel(
-            "<html><br>The term \"Brainrot\" refers to the mental<br>"
-            + "state caused by consuming excessive amounts<br>"
-            + "f low-quality internet content!</html>"
+            "<html><br>Fun Fact: Programming uses logic,<br>"
+            + "syntax, and problem-solving to tell a computer<br>"
+            + "exactly what to do.</html>"
         );
 
         
@@ -543,36 +543,356 @@ public class ProgrammingQuiz {
         // 2D array: { question, choiceA, choiceB, choiceC, choiceD, correct, image (or "") }
         String[][] data = {
 
-            // Q1 - 30
-            { "", // Question
-              "", // Choice A
-              "", // Choice B
-              "", // Choice C
-              "", // Choice D
-              "", "" }, //Correct Letter //leave it blank
-
-            { "", // Question
-              "", // Choice A
-              "", // Choice B
-              "", // Choice C
-              "", // Choice D
-              "", "" }, //Correct Letter //Leave it blank          
-
-
-            // Q31 - 50
-            { "", // Question
-              "", // Choice A
-              "", // Choice B
-              "", // Choice C
-              "", // Choice D
-              "", "ConquestPkg/images/Programming/41.png" }, //Correct Letter //number.png
-
-            { "", // Question
-              "", // Choice A
-              "", // Choice B
-              "", // Choice C
-              "", // Choice D
-                "", "ConquestPkg/images/Programming/  " }, //Correct Letter //number.png
+            // Q1
+            { "What is a Java program?",
+                "Hardware",
+                "Sequence of statements",
+                "Network",
+                "Browser",
+                "B", "" },
+            // Q2
+            { "Which method is required in Java?",
+                "run()",
+                "main()",
+                "start()",
+                "execute()",
+                "B", "" },
+            // Q3
+            { "What symbol ends a statement?",
+                ",",
+                ";",
+                ":",
+                ".",
+                "B", "" },
+            // Q4
+            { "Which is a valid data type?",
+                "integer",
+                "int",
+                "number",
+                "decimal",
+                "B", "" },
+            // Q5
+            { "What is a boolean value?",
+                "yes",
+                "1",
+                "true",
+                "ok",
+                "C", "" },
+            // Q6
+            { "What does // mean?",
+                "Divide",
+                "Comment",
+                "Loop",
+                "Error",
+                "B", "" },
+            // Q7
+            { "Which is used for addition?",
+                "*",
+                "+",
+                "%",
+                "/",
+                "B", "" },
+            // Q8
+            { "What is 10 / 0?",
+                "0",
+                "Error",
+                "10",
+                "1",
+                "B", "" },
+            // Q9
+            { "Which error is found before running?",
+                "Runtime",
+                "Logical",
+                "Compile-time",
+                "Syntax run",
+                "C", "" },
+            // Q10
+            { "Which error gives wrong output?",
+                "Compile",
+                "Runtime",
+                "Logical",
+                "Syntax",
+                "C", "" },
+            // Q11
+            { "What is a variable?",
+                "Fixed value",
+                "Changing value holder",
+                "Function",
+                "Class",
+                "B", "" },
+            // Q12
+            { "What is a constant?",
+                "Changes value",
+                "Fixed value",
+                "Loop",
+                "Class",
+                "B", "" },
+            // Q13
+            { "Keyword for constant?",
+                "const",
+                "static",
+                "final",
+                "fixed",
+                "C", "" },
+            // Q14
+            { "What is an array?",
+                "Single value",
+                "Multiple values in one variable",
+                "Function",
+                "Object",
+                "B", "" },
+            // Q15
+            { "First index of array?",
+                "1",
+                "0",
+                "-1",
+                "10",
+                "B", "" },
+            // Q16
+            { "What does loop do?",
+                "Stop program",
+                "Repeat code",
+                "Print",
+                "Delete",
+                "B", "" },
+            // Q17
+            { "Which loop checks first?",
+                "do-while",
+                "while",
+                "repeat",
+                "none",
+                "B", "" },
+            // Q18
+            { "Which loop runs at least once?",
+                "while",
+                "for",
+                "do-while",
+                "if",
+                "C", "" },
+            // Q19
+            { "What is a method?",
+                "Variable",
+                "Block of code",
+                "Loop",
+                "Data",
+                "B", "" },
+            // Q20
+            { "What is return used for?",
+                "Exit method with value",
+                "Loop",
+                "Print",
+                "Error",
+                "A", "" },
+            // Q21
+            { "What is casting?",
+                "Loop",
+                "Convert data type",
+                "Error",
+                "Class",
+                "B", "" },
+            // Q22
+            { "Which is string?",
+                "123",
+                "\"Hello\"",
+                "true",
+                "5.6",
+                "B", "" },
+            // Q23
+            { "What is concatenation?",
+                "Multiply",
+                "Join values",
+                "Divide",
+                "Subtract",
+                "B", "" },
+            // Q24
+            { "Which is correct?",
+                "int x = \"Hello\"",
+                "String x = \"Hello\"",
+                "double x = \"Hi\"",
+                "char x = \"A\"",
+                "B", "" },
+            // Q25
+            { "What is Scanner used for?",
+                "Output",
+                "Input",
+                "Loop",
+                "Error",
+                "B", "" },
+            // Q26
+            { "What is IDE?",
+                "Software for coding",
+                "Hardware",
+                "Game",
+                "OS",
+                "A", "" },
+            // Q27
+            { "What is debugging?",
+                "Writing code",
+                "Fixing errors",
+                "Compiling",
+                "Running",
+                "B", "" },
+            // Q28
+            { "What is class?",
+                "Variable",
+                "Blueprint of object",
+                "Loop",
+                "Input",
+                "B", "" },
+            // Q29
+            { "What is object?",
+                "Instance of class",
+                "Function",
+                "Loop",
+                "Error",
+                "A", "" },
+            // Q30
+            { "What is syntax error?",
+                "Wrong output",
+                "Wrong format",
+                "Crash",
+                "Loop",
+                "B", "" },
+            // Q31
+            { "What is the error?",
+                "Runtime",
+                "Missing ;",
+                "Logic",
+                "Loop",
+                "B", "ConquestPkg/images/Programming/31.png" },
+            // Q32
+            { "What happens?",
+                "Works",
+                "Error",
+                "Output 10",
+                "Output 0",
+                "B", "ConquestPkg/images/Programming/32.png" },
+            // Q33
+            { "What error?",
+                "Compile",
+                "Runtime",
+                "Array out of bounds",
+                "Logic",
+                "C", "ConquestPkg/images/Programming/33.png" },
+            // Q34
+            { "What does it do?",
+                "Repeat code",
+                "Stop",
+                "Error",
+                "Print once",
+                "A", "ConquestPkg/images/Programming/34.png" },
+            // Q35
+            { "When does it stop?",
+                "Always",
+                "When false",
+                "Never",
+                "Random",
+                "B", "ConquestPkg/images/Programming/35.png" },
+            // Q36
+            { "How many times run?",
+                "0",
+                "At least 1",
+                "2",
+                "Infinite",
+                "B", "ConquestPkg/images/Programming/36.png" },
+            // Q37
+            { "What happens?",
+                "Add",
+                "Concatenate",
+                "Error",
+                "Multiply",
+                "B", "ConquestPkg/images/Programming/37.png" },
+            // Q38
+            { "What is result type?",
+                "int",
+                "double",
+                "depends",
+                "casted type",
+                "D", "ConquestPkg/images/Programming/38.png" },
+            // Q39
+            { "Which is correct?",
+                "int x = 5;",
+                "int = x 5",
+                "x int = 5",
+                "5 = x",
+                "A", "ConquestPkg/images/Programming/39.png" },
+            // Q40
+            { "What keyword used?",
+                "static",
+                "final",
+                "const",
+                "fixed",
+                "B", "ConquestPkg/images/Programming/40.png" },
+            // Q41
+            { "What does it do?",
+                "Output",
+                "Input",
+                "Loop",
+                "Error",
+                "B", "ConquestPkg/images/Programming/41.png" },
+            // Q42
+            { "What is this?",
+                "Input",
+                "Output",
+                "Loop",
+                "Variable",
+                "B", "ConquestPkg/images/Programming/42.png" },
+            // Q43
+            { "What is it?",
+                "Method",
+                "Class",
+                "Loop",
+                "Array",
+                "B", "ConquestPkg/images/Programming/43.png" },
+            // Q44
+            { "What is size?",
+                "depends",
+                "fixed",
+                "random",
+                "none",
+                "B", "ConquestPkg/images/Programming/44.png" },
+            // Q45
+            { "What does it do?",
+                "Decrease",
+                "Increase by 1",
+                "Multiply",
+                "Reset",
+                "B", "ConquestPkg/images/Programming/45.png" },
+            // Q46
+            { "What is it?",
+                "Loop",
+                "Condition",
+                "Class",
+                "Error",
+                "B", "ConquestPkg/images/Programming/46.png" },
+            // Q47
+            { "What happens?",
+                "Single run",
+                "Loop inside loop",
+                "Error",
+                "Skip",
+                "B", "ConquestPkg/images/Programming/47.png" },
+            // Q48
+            { "What is it?",
+                "Declaration",
+                "Call",
+                "Loop",
+                "Input",
+                "B", "ConquestPkg/images/Programming/48.png" },
+            // Q49
+            { "What is the purpose?",
+                "Loop",
+                "Handle errors",
+                "Print",
+                "Input",
+                "B", "ConquestPkg/images/Programming/49.png" },
+            // Q50
+            { "What is the result?",
+                "depends",
+                "Output value",
+                "Error",
+                "Loop",
+                "B", "ConquestPkg/images/Programming/50.png" }
         };
 
 

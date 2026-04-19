@@ -128,9 +128,9 @@ public class QuizMenu {
         driveBtn.addActionListener(e -> new DrivingQuiz(frame, playerName));
         brainBtn.addActionListener(e -> new BrainrotQuiz(frame, playerName));
         geoBtn.addActionListener(e   -> JOptionPane.showMessageDialog(frame, "Geography — Coming Soon!"));
-        mediaBtn.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Media — Coming Soon!"));
+        mediaBtn.addActionListener(e -> new MediaQuiz(frame, playerName));
         genBtn.addActionListener(e   -> new GeneralKnowledgeQuiz(frame, playerName));
-        progBtn.addActionListener(e  -> JOptionPane.showMessageDialog(frame, "Programming — Coming Soon!"));
+        progBtn.addActionListener(e  -> new ProgrammingQuiz(frame, playerName));
 
         frame.revalidate();
         frame.repaint();
