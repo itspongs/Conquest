@@ -127,7 +127,7 @@ public class QuizMenu {
         backBtn.addActionListener(e  -> new MainMenu(frame, playerName));
         driveBtn.addActionListener(e -> new DrivingQuiz(frame, playerName));
         brainBtn.addActionListener(e -> new BrainrotQuiz(frame, playerName));
-        geoBtn.addActionListener(e   -> JOptionPane.showMessageDialog(frame, "Geography — Coming Soon!"));
+        geoBtn.addActionListener(e   -> new GeographyQuiz(frame, playerName));
         mediaBtn.addActionListener(e -> new MediaQuiz(frame, playerName));
         genBtn.addActionListener(e   -> new GeneralKnowledgeQuiz(frame, playerName));
         progBtn.addActionListener(e  -> new ProgrammingQuiz(frame, playerName));

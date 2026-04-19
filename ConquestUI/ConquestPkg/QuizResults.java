@@ -229,6 +229,19 @@ public class QuizResults {
         frame.repaint();
     }
 
+    private static java.io.File getScoreFile() {
+        try {
+            java.io.File jar = new java.io.File(
+                QuizResults.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toURI()
+            );
+            java.io.File dir = jar.isFile() ? jar.getParentFile() : jar;
+            return new java.io.File(dir, "score.txt");
+        } catch (Exception e) {
+            return new java.io.File("score.txt");
+        }
+    }
+
     private void playVictorySound() {
         try {
             java.net.URL url = getClass().getClassLoader().getResource("ConquestPkg/music/victory_sound.wav");
@@ -254,7 +267,7 @@ public class QuizResults {
                      + "Date: " + date + "\n"
                      + "Time: " + time + "\n"
                      + "-----------------------------\n";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("ConquestPkg/score.txt", true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(getScoreFile(), true))) {
             writer.write(entry);
         } catch (IOException e) { e.printStackTrace(); }
     }

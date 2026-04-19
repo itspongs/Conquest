@@ -188,9 +188,22 @@ public class QuizScores {
         frame.repaint();
     }
 
+    private static java.io.File getScoreFile() {
+        try {
+            java.io.File jar = new java.io.File(
+                QuizScores.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toURI()
+            );
+            java.io.File dir = jar.isFile() ? jar.getParentFile() : jar;
+            return new java.io.File(dir, "score.txt");
+        } catch (Exception e) {
+            return new java.io.File("score.txt");
+        }
+    }
+
     private List<String[]> parseScores() {
         List<String[]> results = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("ConquestPkg/score.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(getScoreFile()))) {
             String player = null, category = null, score = null, date = null, time = null;
             String line;
             while ((line = br.readLine()) != null) {
